@@ -1,0 +1,88 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{ esEdicion ? 'Editar Proyecto' : 'Nuevo Proyecto' }}</h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('cliente')" label="Cliente" errorText="El cliente es obligatorio.">
+                <select class="form-select" formControlName="cliente">
+                  <option [ngValue]="null">Seleccione cliente</option>
+                  <option *ngFor="let c of clientes" [ngValue]="c.id_cliente">{{ c.nombre_cliente }}</option>
+                </select>
+              </app-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('tipo_proyecto')" label="Tipo de Proyecto"
+                errorText="El tipo es obligatorio.">
+                <select class="form-select" formControlName="tipo_proyecto">
+                  <option [ngValue]="null">Seleccione tipo</option>
+                  <option *ngFor="let t of tipos" [ngValue]="t.id_tipo">{{ t.nombre_tipo }}</option>
+                </select>
+              </app-form-field>
+            </div>
+
+            <div class="col-md-12">
+              <app-form-field [control]="form.get('nombre_proyecto')" label="Nombre del Proyecto"
+                errorText="El nombre es obligatorio.">
+                <input type="text" class="form-control" formControlName="nombre_proyecto" />
+              </app-form-field>
+            </div>
+
+            <div class="col-md-12">
+              <app-form-field [control]="form.get('descripcion')" label="Descripción">
+                <textarea rows="3" class="form-control" formControlName="descripcion"></textarea>
+              </app-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <app-form-field [control]="form.get('subtotal')" label="Subtotal">
+                <input type="number" class="form-control text-end" formControlName="subtotal" />
+              </app-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <app-form-field [control]="form.get('iva')" label="IVA">
+                <input type="number" class="form-control text-end" formControlName="iva" />
+              </app-form-field>
+            </div>
+
+            <div class="col-md-4">
+              <app-form-field [control]="form.get('total')" label="Total">
+                <input type="number" class="form-control text-end" formControlName="total" />
+              </app-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('fecha_inicio')" label="Fecha Inicio">
+                <input type="date" class="form-control" formControlName="fecha_inicio" />
+              </app-form-field>
+            </div>
+
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('fecha_fin')" label="Fecha Fin">
+                <input type="date" class="form-control" formControlName="fecha_fin" />
+              </app-form-field>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

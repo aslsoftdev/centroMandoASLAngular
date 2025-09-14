@@ -1,0 +1,10 @@
+<input
+  type="text"
+  class="form-control text-end"
+  id="importeInput"
+  [placeholder]="placeholder"
+  [disabled]="isDisabled"
+  [value]="valorFormateado"
+  (keypress)="onKeyPress($event)"
+  (keydown)="onKeyDown($event)"
+  (blur)="onBlur()" />

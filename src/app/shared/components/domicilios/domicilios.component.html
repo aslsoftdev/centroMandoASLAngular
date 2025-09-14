@@ -1,0 +1,135 @@
+<div class="card mt-4 shadow-sm border-0">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="ti ti-home me-2"></i> Domicilios</h6>
+        <button class="btn btn-sm btn-dark" (click)="mostrarFormulario = !mostrarFormulario">
+            <i class="ti ti-plus me-1"></i> {{ mostrarFormulario ? 'Cancelar' : 'Agregar' }}
+        </button>
+    </div>
+
+    <div class="card-body">
+        <!-- Formulario de Nuevo Domicilio -->
+        <div *ngIf="mostrarFormulario" class="border rounded p-3 mb-4 bg-light-subtle">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-map"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.direccion" class="form-control" placeholder="Dirección" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-hash"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.numero_exterior" class="form-control"
+                            placeholder="No. Ext" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-hash"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.numero_interior" class="form-control"
+                            placeholder="No. Int" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-building"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.colonia" class="form-control" placeholder="Colonia" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-mail"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.codigo_postal" class="form-control" placeholder="CP" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-building-skyscraper"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.ciudad" class="form-control" placeholder="Ciudad" />
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="ti ti-info-circle"></i></span>
+                        <input [(ngModel)]="nuevoDomicilio.referencia" class="form-control" placeholder="Referencia" />
+                    </div>
+                </div>
+                <div class="col-12 text-end mt-2">
+                    <button class="btn btn-success btn-sm" (click)="agregarDomicilio()">
+                        <i class="ti ti-device-floppy me-1"></i> Guardar domicilio
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loader -->
+        <div *ngIf="cargando" class="text-center">
+            <img src="assets/images/loading.gif" width="50" />
+        </div>
+
+        <!-- Mensaje si no hay -->
+        <div *ngIf="!cargando && domicilios.length === 0" class="text-muted text-center">
+            No hay domicilios registrados.
+        </div>
+
+        <!-- Lista de domicilios -->
+        <div *ngFor="let d of domicilios" class="border rounded p-3 mb-3 bg-white">
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-map"></i></span>
+                        <input [(ngModel)]="d.direccion" class="form-control" (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-hash"></i></span>
+                        <input [(ngModel)]="d.numero_exterior" class="form-control"
+                            (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-hash"></i></span>
+                        <input [(ngModel)]="d.numero_interior" class="form-control"
+                            (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-building"></i></span>
+                        <input [(ngModel)]="d.colonia" class="form-control" (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-mail"></i></span>
+                        <input [(ngModel)]="d.codigo_postal" class="form-control" (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-building-skyscraper"></i></span>
+                        <input [(ngModel)]="d.ciudad" class="form-control" (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text"><i class="ti ti-info-circle"></i></span>
+                        <input [(ngModel)]="d.referencia" class="form-control" (ngModelChange)="marcarEditado(d)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-2">
+                <button *ngIf="d.editado" class="btn btn-outline-success btn-sm" (click)="guardarEdicion(d)">
+                    <i class="ti ti-check"></i> Guardar
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="borrarDomicilio(d)">
+                    <i class="ti ti-trash"></i> Eliminar
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

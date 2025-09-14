@@ -1,0 +1,95 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Roles de usuarios</h5>
+        <a routerLink="/roles/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Agregar rol
+        </a>
+      </div>
+
+      <div class="card-body pt-2">
+        <!-- Filtros -->
+        <div class="row mb-3">
+          <!-- Switch de solo activos -->
+          <div class="col-md-4">
+            <div class="form-check form-switch ms-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="switchSoloActivos"
+                [(ngModel)]="soloActivos"
+                (change)="obtenerRolesUsuarios()" />
+              <label class="form-check-label" for="switchSoloActivos">
+                {{ soloActivos
+                   ? 'Mostrar solo roles activos'
+                   : 'Mostrar activos y archivados' }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Buscador -->
+          <div class="col-md-4">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar por nombre del rol..."
+                [(ngModel)]="busqueda"
+                (keyup.enter)="onBuscar()" />
+              <button class="btn btn-outline-secondary" type="button" (click)="onBuscar()">
+                <i class="ti ti-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shimmer -->
+        <div *ngIf="cargando" class="shimmer-container">
+          <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+            <div class="placeholder-col" *ngFor="let __ of [1,2,3,4]"></div>
+          </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive" *ngIf="!cargando">
+          <table class="table table-hover bg-white">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre del Rol</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let rol of roles; let i = index">
+                <td>{{ rol.id_rol }}</td>
+                <td>{{ rol.nombre_rol }}</td>
+                <td [innerHTML]="rol.nombre_estado | estadoBadge"></td>
+                <td class="text-center">
+                  <a *ngIf="rol.id_estado !== 3"
+                     class="btn btn-link-primary"
+                     title="Editar"
+                     [routerLink]="['/roles/editar', rol.id_rol]">
+                    <i class="ti ti-pencil"></i>
+                  </a>
+                  <button class="btn btn-link-danger"
+                          (click)="cambiarEstado(rol)"
+                          [title]="rol.id_estado === 2 ? 'Archivar' : 'Activar'">
+                    <i [class]="rol.id_estado === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="roles.length === 0">
+                <td colspan="4" class="text-center text-muted">
+                  No hay roles disponibles.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

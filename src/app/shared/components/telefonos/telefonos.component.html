@@ -1,0 +1,63 @@
+<div class="card mt-4 shadow-sm border-0">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="mb-0"><i class="ti ti-phone me-2"></i> Teléfonos</h6>
+    <button class="btn btn-sm btn-dark" (click)="guardarTelefono()">
+      <i class="ti ti-plus me-1"></i> Agregar
+    </button>
+  </div>
+
+  <div class="card-body">
+    <div class="input-group mb-3">
+      <input [(ngModel)]="nuevoTelefono" class="form-control" placeholder="Nuevo teléfono" />
+    </div>
+
+    <div *ngIf="cargando" class="text-center">
+      <img src="assets/images/loading.gif" width="50" />
+    </div>
+
+    <table class="table table-hover table-sm" *ngIf="!cargando && telefonos.length > 0">
+      <thead>
+        <tr>
+          <th>Número</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tel of telefonos">
+          <td>
+            <input type="text"
+                   class="form-control form-control-sm"
+                   [(ngModel)]="tel.numero_telefono"
+                   (ngModelChange)="marcarEditado(tel)" />
+          </td>
+          <td>
+            <span class="badge"
+                  [ngClass]="{
+                    'bg-success': tel.estado_actual == 2,
+                    'bg-secondary': tel.estado_actual != 2
+                  }">
+              {{ tel.estado_actual == 2 ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td class="d-flex gap-1">
+            <button *ngIf="tel.editado"
+                    class="btn btn-outline-success btn-sm"
+                    (click)="guardarEdicion(tel)">
+              <i class="ti ti-check"></i>
+            </button>
+
+            <button class="btn btn-outline-danger btn-sm"
+                    (click)="borrarTelefono(tel)">
+              <i class="ti ti-trash"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!cargando && telefonos.length == 0" class="text-muted text-center">
+      No hay teléfonos registrados.
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Proyectos</h5>
+        <a routerLink="/proyectos/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Nuevo proyecto
+        </a>
+      </div>
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+          <!-- Shimmer mientras carga -->
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div *ngFor="let __ of [1,2,3,4,5,6,7,8]" class="placeholder-col"></div>
+            </div>
+          </div>
+
+          <!-- Tabla de proyectos -->
+          <table class="table table-hover bg-white" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Nombre</th>
+                <th>Subtotal</th>
+                <th>IVA</th>
+                <th>Total</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of proyectos">
+                <td>{{ p.id_proyecto }}</td>
+                <td>{{ p.cliente_nombre || ('#' + p.cliente) }}</td>
+                <td>{{ p.nombre_proyecto }}</td>
+                <td>{{ p.subtotal | currency }}</td>
+                <td>{{ p.iva | currency }}</td>
+                <td>{{ p.total | currency }}</td>
+                <td>{{ p.fecha_inicio | date: "dd/MM/yyyy" }}</td>
+                <td>{{ p.fecha_fin | date: "dd/MM/yyyy" }}</td>
+                <td [innerHTML]="p.nombre_estado | estadoBadge"></td>
+                <td>
+                  <a class="btn btn-link-primary" [routerLink]="['/proyectos/editar', p.id_proyecto]" title="Editar">
+                    <i class="ti ti-pencil"></i>
+                  </a>
+                  <button class="btn btn-link-danger" (click)="cambiarEstado(p)"
+                    [title]="p.estado_actual === 3 ? 'Activar' : 'Archivar'">
+                    <i [class]="p.estado_actual === 3 ? 'ti ti-power' : 'ti ti-archive'"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="proyectos.length === 0">
+                <td colspan="10" class="text-center text-muted">
+                  No hay proyectos disponibles.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

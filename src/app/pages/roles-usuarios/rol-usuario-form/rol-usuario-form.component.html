@@ -1,0 +1,122 @@
+<!-- src/app/pages/roles/rol-usuario-form/rol-usuario-form.component.html -->
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Rol de Usuario' : 'Nuevo Rol de Usuario' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+            <!-- Nombre del Rol -->
+            <div class="col-md-8">
+              <app-form-field
+                [control]="form.get('nombre_rol')"
+                label="Nombre del Rol"
+                errorText="El nombre del rol es obligatorio."
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_rol"
+                  [ngClass]="{
+                    'is-invalid':
+                      form.get('nombre_rol')?.invalid &&
+                      form.get('nombre_rol')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Comentarios (opcional) -->
+            <div class="col-md-4">
+              <app-form-field
+                [control]="form.get('comentarios')"
+                label="Comentarios (opcional)"
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="comentarios"
+                />
+              </app-form-field>
+            </div>
+          </div>
+        </form>
+
+        <!-- Módulos y Permisos -->
+        <h6 class="mt-4 mb-2 fw-semibold text-muted">Permisos por Módulo</h6>
+        <div class="text-end mb-3">
+          <button
+            class="btn btn-outline-primary btn-sm"
+            type="button"
+            (click)="toggleTodosLosPermisos()"
+            title="Marcar o desmarcar todos los permisos disponibles"
+          >
+            <i class="ti ti-checks me-1"></i>
+            {{ todosPermisosSeleccionados() ? 'Quitar todos' : 'Seleccionar todos' }}
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle bg-white">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 25%;">Módulo</th>
+                <th>Permisos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let modulo of modulos">
+                <td>
+                  <strong>{{ modulo.nombre_modulo }}</strong><br />
+                  <small class="text-muted">{{ modulo.nombre_tecnico }}</small>
+                </td>
+                <td>
+                  <div class="d-grid gap-2">
+                    <div class="form-check" *ngFor="let permiso of modulo.permisos">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [checked]="permisoMarcado(permiso.id_relacion)"
+                        (change)="togglePermiso(permiso.id_relacion)"
+                        id="permiso-{{ permiso.id_relacion }}"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="permiso-{{ permiso.id_relacion }}"
+                      >
+                        {{ permiso.nombre_permiso }}
+                      </label>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          *ngIf="!modulos.length && !cargando"
+          class="text-muted mt-4 text-center"
+        >
+          No hay módulos disponibles.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

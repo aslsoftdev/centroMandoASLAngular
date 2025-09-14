@@ -1,0 +1,91 @@
+export interface NavigationItem {
+  id: string;
+  title: string;
+  type: 'item' | 'collapse' | 'group';
+  translate?: string;
+  icon?: string;
+  hidden?: boolean;
+  url?: string;
+  classes?: string;
+  external?: boolean;
+  target?: boolean;
+  breadcrumbs?: boolean;
+  children?: NavigationItem[];
+  role?: string[];
+  isMainParent?: boolean;
+}
+
+export const NavigationItems: NavigationItem[] = [
+  {
+    id: 'dashboard',
+    title: 'Dashboard',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'default',
+        title: 'Dashboard',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/default',
+        icon: 'ti ti-layout-dashboard',
+        breadcrumbs: false
+      }
+    ]
+  },
+  {
+    id: 'modulos',
+    title: 'Módulos',
+    type: 'group',
+    icon: 'icon-navigation',
+    children: [
+      {
+        id: 'gastos',
+        title: 'Gastos',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/gastos',
+        icon: 'ti ti-cash',
+        breadcrumbs: false
+      },
+      {
+        id: 'proyectos',
+        title: 'Proyectos',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/proyectos',
+        icon: 'ti ti-briefcase',
+        breadcrumbs: false
+      },
+      {
+        id: 'facturas',
+        title: 'Facturas',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/facturas',
+        icon: 'ti ti-file-invoice',
+        breadcrumbs: false
+      },
+      {
+        id: 'pagos',
+        title: 'Pagos',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/pagos',
+        icon: 'ti ti-cash-banknote',
+        breadcrumbs: false
+      },
+      {
+        id: 'cuentas',
+        title: 'Cuentas',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/cuentas',
+        icon: 'ti ti-building-bank',
+        breadcrumbs: false
+      }
+    ]
+  }
+];
+
+

@@ -1,0 +1,5 @@
+:host ::ng-deep input.form-control {
+  height: calc(3.5rem + 2px);   /* altura estándar de form-floating */
+  padding: 1rem 0.75rem;
+  line-height: 1.25;
+}

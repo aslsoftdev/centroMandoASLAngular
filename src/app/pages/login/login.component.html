@@ -1,0 +1,83 @@
+<div class="auth-main">
+  <div class="auth-wrapper v3">
+    <div class="auth-form">
+      <div class="card my-5">
+        <div class="card-body">
+          <a href="#" class="d-flex justify-content-center">
+            <img src="assets/images/logo_asl.png" width="250" alt="logo" />
+          </a>
+          <div class="row">
+            <div class="d-flex justify-content-center">
+              <div class="auth-header">
+                <h2 class="text-secondary mt-2"><b>Hola, bienvenido de vuelta</b></h2>
+                <p class="fs-4 mt-2">Escribe tus credenciales para continuar</p>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="d-grid">
+            <button type="button" class="btn mt-2 btn-light-primary bg-light text-muted">
+              <img src="assets/images/authentication/google-icon.svg" alt="google" />
+              Sign In With Google
+            </button>
+          </div> -->
+          <!-- <div class="saprator mt-3">
+            <span>or</span>
+          </div> -->
+          <h5 class="my-4 d-flex justify-content-center">Inicia con tu usuario</h5>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-floating mb-3">
+              <input
+                formControlName="usuario"
+                type="text"
+                class="form-control"
+                placeholder="Usuario" />
+              <label>Usuario</label>
+              <div
+                *ngIf="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched"
+                class="invalid-feedback d-block">
+                Es obligatorio.
+              </div>
+            </div>
+
+            <div class="form-floating mb-3">
+              <input
+                formControlName="contrasena"
+                type="password"
+                class="form-control"
+                placeholder="Contraseña" />
+              <label>Contraseña</label>
+              <div
+                *ngIf="loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched"
+                class="invalid-feedback d-block">
+                Es obligatorio.
+              </div>
+            </div>
+
+            <div class="d-grid mt-4">
+              <button
+                [disabled]="cargando"
+                class="btn btn-secondary"
+                type="submit">
+                {{ cargando ? 'Ingresando…' : 'Iniciar sesión' }}
+              </button>
+            </div>
+          </form>
+
+          <!-- <div class="d-flex mt-1 justify-content-between">
+            <div class="form-check">
+              <input class="form-check-input input-primary" type="checkbox" id="customCheckc1" checked="" />
+              <label class="form-check-label text-muted" for="customCheckc1">Remember me</label>
+            </div>
+            <h5 class="text-secondary">
+              <a href="javascript:">Forgot Password?</a>
+            </h5>
+          </div> -->
+          <!-- <hr />
+          <h5 class="d-flex justify-content-center">
+            <a [routerLink]="['/guest/register']">Don't have an account?</a>
+          </h5> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

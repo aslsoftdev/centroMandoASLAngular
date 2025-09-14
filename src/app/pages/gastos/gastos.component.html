@@ -1,0 +1,64 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Gastos</h5>
+        <a routerLink="/gastos/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Nuevo gasto
+        </a>
+      </div>
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+          <!-- Shimmer mientras carga -->
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div *ngFor="let __ of [1,2,3,4,5,6,7]" class="placeholder-col"></div>
+            </div>
+          </div>
+
+          <!-- Tabla de gastos -->
+          <table class="table table-hover bg-white" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Descripción</th>
+                <th>Importe</th>
+                <th>Fecha</th>
+                <th>Facturable</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let g of gastos">
+                <td>{{ g.id_gasto }}</td>
+                <td>{{ g.descripcion }}</td>
+                <td>{{ g.importe | currency }}</td>
+                <td>{{ g.fecha_gasto | date: "dd 'de' MMMM 'de' yyyy, h:mm a" }}</td>
+                <td>
+                  <span class="badge bg-info" *ngIf="g.facturable == 1">Sí</span>
+                  <span class="badge bg-secondary" *ngIf="g.facturable == 0">No</span>
+                </td>
+                <td [innerHTML]="g.nombre_estado | estadoBadge"></td>
+                <td>
+                  <a class="btn btn-link-primary" [routerLink]="['/gastos/editar', g.id_gasto]" title="Editar">
+                    <i class="ti ti-pencil"></i>
+                  </a>
+                  <button class="btn btn-link-danger" (click)="cambiarEstado(g)"
+                    [title]="g.estado_actual === 3 ? 'Activar' : 'Archivar'">
+                    <i [class]="g.estado_actual === 3 ? 'ti ti-power' : 'ti ti-archive'"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="gastos.length === 0">
+                <td colspan="7" class="text-center text-muted">
+                  No hay gastos disponibles.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

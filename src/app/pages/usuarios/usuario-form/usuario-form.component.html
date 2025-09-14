@@ -1,0 +1,206 @@
+<!-- src/app/pages/usuarios/usuario-form/usuario-form.component.html -->
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Usuario' : 'Nuevo Usuario' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Nombre -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('nombre_usuario')"
+                label="Nombre"
+                errorText="El nombre es obligatorio."
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_usuario"
+                  [ngClass]="{
+                    'is-invalid': form.get('nombre_usuario')?.invalid && form.get('nombre_usuario')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Usuario -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('usuario_valor')"
+                label="Usuario"
+                errorText="El usuario es obligatorio."
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="usuario_valor"
+                  [ngClass]="{
+                    'is-invalid': form.get('usuario_valor')?.invalid && form.get('usuario_valor')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Correo electrónico -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('correo_electronico')"
+                label="Correo electrónico"
+                errorText="Introduce un correo válido."
+              >
+                <input
+                  type="email"
+                  class="form-control"
+                  formControlName="correo_electronico"
+                  [ngClass]="{
+                    'is-invalid': form.get('correo_electronico')?.invalid && form.get('correo_electronico')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Número celular -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('numero_celular')"
+                label="Número celular"
+                errorText="Introduce un número válido."
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="numero_celular"
+                  [ngClass]="{
+                    'is-invalid': form.get('numero_celular')?.invalid && form.get('numero_celular')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Rol -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('rol')"
+                label="Rol"
+                errorText="El rol es obligatorio."
+              >
+                <select
+                  class="form-select"
+                  formControlName="rol"
+                  (change)="onRolChange($event)"
+                  [ngClass]="{
+                    'is-invalid': form.get('rol')?.invalid && form.get('rol')?.touched
+                  }"
+                >
+                  <option [ngValue]="null">Seleccione rol</option>
+                  <option *ngFor="let r of roles" [ngValue]="r.id_rol">
+                    {{ r.nombre_rol }}
+                  </option>
+                </select>
+              </app-form-field>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('contrasena')"
+                label="Contraseña"
+                errorText=""
+              >
+                <input
+                  type="password"
+                  class="form-control"
+                  formControlName="contrasena"
+                  placeholder="••••••"
+                  [ngClass]="{
+                    'is-invalid': form.get('contrasena')?.invalid && form.get('contrasena')?.touched
+                  }"
+                />
+              </app-form-field>
+              <small class="text-muted ms-1">
+                Dejar vacío para no cambiar la contraseña
+              </small>
+            </div>
+
+          </div>
+        </form>
+
+        <!-- Permisos por Módulo -->
+        <div class="d-flex justify-content-between align-items-center mt-4 mb-2">
+          <h6 class="mb-0 fw-semibold text-muted">Permisos por Módulo</h6>
+          <button
+            class="btn btn-outline-primary btn-sm"
+            (click)="toggleTodosLosPermisos()"
+            title="Marcar o desmarcar todos los permisos disponibles"
+          >
+            <i class="ti ti-checks me-1"></i>
+            {{ todosPermisosSeleccionados() ? 'Quitar todos' : 'Seleccionar todos' }}
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle bg-white">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 25%;">Módulo</th>
+                <th>Permisos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let modulo of modulos">
+                <td>
+                  <strong>{{ modulo.nombre_modulo }}</strong><br />
+                  <small class="text-muted">{{ modulo.nombre_tecnico }}</small>
+                </td>
+                <td>
+                  <div class="d-grid gap-2">
+                    <div class="form-check" *ngFor="let permiso of modulo.permisos">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [checked]="permisoMarcado(permiso.id_relacion)"
+                        (change)="togglePermiso(permiso.id_relacion)"
+                        id="permiso-{{ permiso.id_relacion }}"
+                      />
+                      <label
+                        class="form-check-label"
+                        for="permiso-{{ permiso.id_relacion }}"
+                      >
+                        {{ permiso.nombre_permiso }}
+                      </label>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div
+          *ngIf="!modulos.length && !cargando"
+          class="text-muted mt-4 text-center"
+        >
+          No hay módulos disponibles.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

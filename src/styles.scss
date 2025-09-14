@@ -1,0 +1,356 @@
+/* You can add global styles to this file, and also import other style files */
+/**======================================================================
+=========================================================================
+Template Name: berry - Most Complete Angular Admin Template
+Author: CodedThemes
+Support: https://codedthemes.support-hub.io/
+File: style.css
+=========================================================================
+=================================================================================== */
+
+// custom
+$primary-color: #0d6efd;
+$primary-hover: #084298;
+$danger-color: #e53935;
+$danger-hover: #c62828;
+
+// main framework
+@import 'node_modules/bootstrap/scss/functions';
+@import 'node_modules/bootstrap/scss/variables';
+@import 'node_modules/bootstrap/scss/variables-dark';
+
+@import 'scss/settings/color-variables';
+@import 'scss/settings/theme-variables';
+@import 'scss/settings/bootstrap-variables.scss';
+
+@import 'scss/bootstrap/bootstrap.scss';
+
+@import 'node_modules/bootstrap/scss/utilities';
+@import 'node_modules/bootstrap/scss/utilities/api';
+
+@import 'scss/themes/generic.scss';
+@import 'scss/themes/general.scss';
+
+// Layouts
+@import 'scss/themes/layouts/layouts';
+
+// Components
+@import 'scss/themes/components/components';
+
+// pages
+@import 'scss/themes/pages/page.scss';
+
+@import 'scss/themes/customizer';
+@import 'scss/style-preset.scss';
+
+// fonts
+@import url('scss/fonts/berry/berry-icons.css'); /** custom font icons - berry **/
+@import 'scss/fonts/tabler-icons.min.css';
+@import 'scss/fonts/phosphor/duotone/style.css';
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+.btn-link {
+  background-color: transparent;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  font-size: 16px;
+  line-height: 1;
+
+  &-primary {
+    color: $primary-color;
+
+    &:hover,
+    &:focus {
+      color: $primary-hover;
+      text-decoration: none;
+    }
+  }
+
+  &-danger {
+    color: $danger-color;
+
+    &:hover,
+    &:focus {
+      color: $danger-hover;
+      text-decoration: none;
+    }
+  }
+}
+
+.table {
+  --bs-table-bg: #fff;
+  background-color: #fff;
+
+  > :not(caption) > * > * {
+    background-color: #fff !important;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid #eaecef;
+  }
+}
+
+/* Shimmer loading rows */
+.shimmer-container {
+  padding: 0.5rem 0;
+}
+
+.shimmer {
+  display: flex;
+  gap: 12px;
+  animation: shimmer 1.2s infinite linear;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e6e6e6 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+}
+
+.placeholder-row {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.placeholder-col {
+  flex: 1;
+  height: 24px;
+  border-radius: 4px;
+  background-color: #e0e0e0;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader-img {
+  width: 80px;
+  height: 80px;
+}
+
+.table-responsive {
+  border: 1px solid rgba(0, 0, 0, 0.05);  /* borde general tenue */
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  overflow: auto;
+}
+
+/* Tabla sin colapsar bordes, para mantener separación clara */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+/* Celdas con separador inferior ultra-delgado */
+.table th,
+.table td {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 1rem;
+}
+
+/* Cabecera más marcada, pero aún suave */
+.table thead th {
+  background-color: #fafafa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  font-weight: 600;
+}
+
+/* Pie de tabla con su borde superior tenue */
+.table tfoot th,
+.table tfoot td {
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  background-color: #fafafa;
+  font-weight: 600;
+}
+
+/* Hover sutil */
+.table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Esquinas redondeadas en el contenedor, no en cada celda */
+.table-responsive .table {
+  border-radius: 0; /* la redondez la maneja el .table-responsive */
+}
+
+ng-select .ng-dropdown-panel {
+  background-color: #ffffff !important;
+  border: 1px solid #dee2e6 !important; /* gris tenue estilo Bootstrap */
+  border-radius: 0.5rem !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+ng-select .ng-dropdown-panel .ng-option {
+  padding: 10px 15px;
+  border-bottom: 1px solid #f1f1f1;
+  background-color: white;
+  color: #212529;
+}
+
+ng-select .ng-dropdown-panel .ng-option:hover {
+  background-color: #f8f9fa;
+}
+
+ng-select .ng-dropdown-panel .ng-option-marked {
+  background-color: #e9ecef;
+  font-weight: 500;
+}
+
+ng-select .ng-dropdown-panel .ng-option:last-child {
+  border-bottom: none;
+}
+
+/* TAB activo con color secondary (#0c5cb4) y mayor padding */
+.nav-tabs .nav-link.active {
+  border: none;
+  border-bottom: 3px solid $primary-color; /* secondary */
+  font-weight: 600;
+  color: $primary-color;
+  background-color: transparent;
+  padding: 12px 24px; /* más alto y más ancho */
+  box-shadow: none;
+}
+
+/* TABs inactivos: gris elegante */
+.nav-tabs .nav-link {
+  color: #6c757d;
+  background-color: transparent;
+  border: none;
+  padding: 12px 24px;
+  transition: color 0.2s ease, border-bottom 0.2s ease;
+}
+
+/* Hover sobre TAB inactivo */
+.nav-tabs .nav-link:hover {
+  color: $primary-color;
+  border-bottom: 3px solid $primary-hover;
+}
+
+/* 1) El contenedor .ng-select-wrapper dibuja el borde “Bootstrap” */
+.ng-select-wrapper {
+  display: block;
+  width: 100%;
+  min-height: 38px;              /* Mismo tamaño que .form-control */
+  padding: 0;
+  box-sizing: border-box;
+
+  /* Borde igual al de .form-control */
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;        /* 4px / .25rem en Bootstrap 5 */
+  background-color: #fff;
+
+  /* Transición suave al ganar foco o error */
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+/* 2) Si el control está inválido, borde rojo igual que .is-invalid de Bootstrap */
+.ng-select-wrapper.ng-select-invalid {
+  border-color: $primary-hover;         /* Rojo Bootstrap */
+  box-shadow: 0 0 0 0.2rem $primary-hover;
+}
+
+/* 3) Cuando el <ng-select> recibe foco, se resalta con azul igual que .form-control:focus */
+.ng-select-wrapper:focus-within {
+  border-color: #86b7fe;         /* Azul Bootstrap */
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* ================================================================================== */
+/* C) Dentro de ng-select eliminamos cualquier borde interno, y centramos contenido verticalmente */
+/* ================================================================================== */
+
+/* 4) Quitamos el borde interno de ng-select */
+ng-select .ng-select-container {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0;                     /* Sin padding extra */
+  min-height: 38px;               /* Coincide con la altura del wrapper */
+  display: flex;                  /* Para centrar verticalmente el placeholder o chips */
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 5) Placeholder y chips se centran verticalmente y se recortan si son muy largos */
+ng-select .ng-placeholder,
+ng-select .ng-value-container .ng-value,
+ng-select .ng-input {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.5rem;            /* Margen a la izquierda para que no quede pegado al borde */
+  font-size: 0.9rem;              /* Tamaño similar a .form-control */
+  color: #6c757d;                 /* Gris tenue para placeholder */
+}
+
+/* 6) Cada chip recibe un fondo gris y bordes redondeados */
+ng-select .ng-value-container .ng-value {
+  background-color: #e9ecef;      /* Gris muy claro */
+  border-radius: 12px;
+  margin-right: 0.25rem;          /* Pequeña separación entre chips */
+  padding: 0.125rem 0.5rem;       /* Padding interior pequeño */
+  font-size: 0.85rem;
+  color: #495057;                 /* Gris oscuro para texto */
+}
+
+/* 7) Limitar la altura del dropdown para que tenga scroll interno si hay muchas opciones */
+ng-select .ng-dropdown-panel {
+  overflow-y: auto;
+}
+
+/* 8) Centrar la flecha del dropdown verticalmente */
+ng-select .ng-arrow-wrapper {
+  position: absolute;
+  right: 0.75rem;                 /* Dentro del padding del wrapper */
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+/* Quita el borde superior de la tabla completa */
+.card .table.table-bordered {
+  border-top: 0;
+}
+
+/* Quita el borde superior de los th del header */
+.card .table.table-bordered thead th {
+  border-top: none;
+}
+
+/* Refina el color de todos los bordes de las celdas */
+.card .table.table-bordered th,
+.card .table.table-bordered td {
+  border-color: #e9ecef;
+}
+
+.ng-dropdown-panel {
+  min-width: 250px !important;
+  width: auto !important;
+}
+
+.bg-info {
+  background-color: #d0ebff !important; // celeste claro suave
+  color: #084298;
+}
+
+.bg-warning {
+  background-color: #fff3cd !important; // amarillo suave
+  color: #664d03;
+}
