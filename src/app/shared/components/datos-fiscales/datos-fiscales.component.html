@@ -1,0 +1,194 @@
+<div class="card mt-4 shadow-sm border-0">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h6 class="mb-0"><i class="ti ti-file-invoice me-2"></i> Datos fiscales</h6>
+    <button class="btn btn-sm btn-dark" (click)="mostrarFormulario = !mostrarFormulario">
+      <i class="ti ti-plus me-1"></i> {{ mostrarFormulario ? 'Cancelar' : 'Agregar' }}
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- Form nuevo -->
+    <div *ngIf="mostrarFormulario" class="border rounded p-3 mb-4 bg-light-subtle">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-3">
+          <label class="form-label mb-1">RFC *</label>
+          <input [(ngModel)]="nuevo.rfc" class="form-control" placeholder="RFC" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Tipo contribuyente *</label>
+          <select [(ngModel)]="nuevo.sat_tipo_contribuyente" class="form-select">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of tiposContribuyente" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Método de pago *</label>
+          <select [(ngModel)]="nuevo.sat_metodo_pago" class="form-select">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of metodosPago" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Forma de pago *</label>
+          <select [(ngModel)]="nuevo.sat_forma_pago" class="form-select">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of formasPago" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label mb-1">Régimen fiscal *</label>
+          <select [(ngModel)]="nuevo.sat_regimen_fiscal" class="form-select">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of regimenesFiscales" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- NUEVO: Uso CFDI -->
+        <div class="col-md-4">
+          <label class="form-label mb-1">Uso CFDI</label>
+          <select [(ngModel)]="nuevo.sat_uso_cfdi" class="form-select">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of usosCFDI" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label mb-1">CP *</label>
+          <input [(ngModel)]="nuevo.codigo_postal" class="form-control" placeholder="00000" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label mb-1">Calle *</label>
+          <input [(ngModel)]="nuevo.calle" class="form-control" placeholder="Calle" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">No. exterior *</label>
+          <input [(ngModel)]="nuevo.numero_exterior" class="form-control" placeholder="Ext" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">No. interior</label>
+          <input [(ngModel)]="nuevo.numero_interior" class="form-control" placeholder="Int" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Colonia *</label>
+          <input [(ngModel)]="nuevo.colonia" class="form-control" placeholder="Colonia" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Estado *</label>
+          <input [(ngModel)]="nuevo.estado" class="form-control" placeholder="Estado" />
+        </div>
+
+        <div class="col-12 text-end mt-2">
+          <button class="btn btn-success btn-sm" (click)="agregar()">
+            <i class="ti ti-device-floppy me-1"></i> Guardar datos fiscales
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div *ngIf="cargando" class="text-center">
+      <img src="assets/images/loading.gif" width="50" />
+    </div>
+
+    <!-- Vacío -->
+    <div *ngIf="!cargando && registros.length === 0" class="text-muted text-center">
+      No hay datos fiscales registrados.
+    </div>
+
+    <!-- Lista/edición -->
+    <div *ngFor="let r of registros" class="border rounded p-3 mb-3 bg-white">
+      <div class="row g-2">
+        <div class="col-md-3">
+          <label class="form-label mb-1">RFC *</label>
+          <input [(ngModel)]="r.rfc" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Tipo contribuyente *</label>
+          <select [(ngModel)]="r.sat_tipo_contribuyente" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+            <option *ngFor="let o of tiposContribuyente" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Método de pago *</label>
+          <select [(ngModel)]="r.sat_metodo_pago" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+            <option *ngFor="let o of metodosPago" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Forma de pago *</label>
+          <select [(ngModel)]="r.sat_forma_pago" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+            <option *ngFor="let o of formasPago" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label mb-1">Régimen fiscal *</label>
+          <select [(ngModel)]="r.sat_regimen_fiscal" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+            <option *ngFor="let o of regimenesFiscales" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <!-- NUEVO: Uso CFDI -->
+        <div class="col-md-4">
+          <label class="form-label mb-1">Uso CFDI</label>
+          <select [(ngModel)]="r.sat_uso_cfdi" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+            <option *ngFor="let o of usosCFDI" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label mb-1">CP *</label>
+          <input [(ngModel)]="r.codigo_postal" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label mb-1">Calle *</label>
+          <input [(ngModel)]="r.calle" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">No. exterior *</label>
+          <input [(ngModel)]="r.numero_exterior" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">No. interior</label>
+          <input [(ngModel)]="r.numero_interior" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Colonia *</label>
+          <input [(ngModel)]="r.colonia" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label mb-1">Estado *</label>
+          <input [(ngModel)]="r.estado" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end gap-2 mt-2">
+        <button *ngIf="r.editado" class="btn btn-outline-success btn-sm" (click)="guardarEdicion(r)">
+          <i class="ti ti-check"></i> Guardar
+        </button>
+        <button class="btn btn-outline-danger btn-sm" (click)="archivar(r)">
+          <i class="ti ti-archive"></i> Archivar
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

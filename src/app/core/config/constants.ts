@@ -10,8 +10,11 @@ export const API_ENDPOINTS = {
   gastos: `${API_BASE_URL}/api.gastos.php`,
   combos: `${API_BASE_URL}/api.combos.php`,
   proyectos: `${API_BASE_URL}/api.proyectos.php`,
- 
+  facturas: `${API_BASE_URL}/api.facturas.php`,
   clientes: `${API_BASE_URL}/api.clientes.php`,
+  datos_fiscales: `${API_BASE_URL}/api.datos_fiscales.php`,
+  pagos: `${API_BASE_URL}/api.pagos.php`,
+  
   categoriasProductos: `${API_BASE_URL}/api.categorias_productos.php`,
   empresasSucursales: `${API_BASE_URL}/api.empresas.php`,
   productos: `${API_BASE_URL}/api.productos.php`,

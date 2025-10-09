@@ -1,16 +1,29 @@
 <div class="card mt-4 shadow-sm border-0">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h6 class="mb-0"><i class="ti ti-phone me-2"></i> Teléfonos</h6>
-    <button class="btn btn-sm btn-dark" (click)="guardarTelefono()">
-      <i class="ti ti-plus me-1"></i> Agregar
-    </button>
   </div>
 
   <div class="card-body">
+    <!-- Input + botón agregar juntos -->
     <div class="input-group mb-3">
-      <input [(ngModel)]="nuevoTelefono" class="form-control" placeholder="Nuevo teléfono" />
+      <span class="input-group-text"><i class="ti ti-phone"></i></span>
+      <input
+        [(ngModel)]="nuevoTelefono"
+        class="form-control"
+        placeholder="Nuevo teléfono"
+        (keyup.enter)="guardarTelefono()"
+      />
+      <button
+        class="btn btn-dark"
+        type="button"
+        (click)="guardarTelefono()"
+        [disabled]="!nuevoTelefono || !nuevoTelefono.trim()"
+      >
+        <i class="ti ti-plus me-1"></i> Agregar
+      </button>
     </div>
 
+    <!-- Loader -->
     <div *ngIf="cargando" class="text-center">
       <img src="assets/images/loading.gif" width="50" />
     </div>
@@ -26,29 +39,36 @@
       <tbody>
         <tr *ngFor="let tel of telefonos">
           <td>
-            <input type="text"
-                   class="form-control form-control-sm"
-                   [(ngModel)]="tel.numero_telefono"
-                   (ngModelChange)="marcarEditado(tel)" />
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              [(ngModel)]="tel.numero_telefono"
+              (ngModelChange)="marcarEditado(tel)"
+            />
           </td>
           <td>
-            <span class="badge"
-                  [ngClass]="{
-                    'bg-success': tel.estado_actual == 2,
-                    'bg-secondary': tel.estado_actual != 2
-                  }">
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-success': tel.estado_actual == 2,
+                'bg-secondary': tel.estado_actual != 2
+              }"
+            >
               {{ tel.estado_actual == 2 ? 'Activo' : 'Inactivo' }}
             </span>
           </td>
           <td class="d-flex gap-1">
-            <button *ngIf="tel.editado"
-                    class="btn btn-outline-success btn-sm"
-                    (click)="guardarEdicion(tel)">
+            <button
+              *ngIf="tel.editado"
+              class="btn btn-outline-success btn-sm"
+              (click)="guardarEdicion(tel)"
+            >
               <i class="ti ti-check"></i>
             </button>
-
-            <button class="btn btn-outline-danger btn-sm"
-                    (click)="borrarTelefono(tel)">
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="borrarTelefono(tel)"
+            >
               <i class="ti ti-trash"></i>
             </button>
           </td>

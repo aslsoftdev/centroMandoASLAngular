@@ -150,10 +150,36 @@ const routes: Routes = [
         path: 'proyectos/editar/:id',
         loadComponent: () =>
           import('./pages/proyectos/proyecto-form/proyecto-form.component').then(m => m.ProyectoFormComponent)
-      }
+      },
 
+      {
+        path: 'facturas',
+        loadComponent: () =>
+          import('./pages/facturas/facturas.component').then(m => m.FacturasComponent)
+      },
+      {
+        path: 'facturas/nuevo',
+        loadComponent: () =>
+          import('./pages/facturas/factura-form/factura-form.component').then(m => m.FacturaFormComponent)
+      },
+      {
+        path: 'facturas/editar/:id',
+        loadComponent: () =>
+          import('./pages/facturas/factura-form/factura-form.component').then(m => m.FacturaFormComponent)
+      },
+      
+      {
+        path: 'facturas/pdf/:id',
+        loadComponent: () =>
+          import('./pages/facturas/factura-pdf/factura-pdf.component').then(m => m.FacturaPdfPageComponent)
+      },
 
-    
+      {
+        path: 'pagos/pdf/:id',
+        loadComponent: () =>
+          import('./pages/facturas/pago-pdf/pago-pdf.component').then(m => m.PagoPdfPageComponent)
+      },
+
     ]
   },
 

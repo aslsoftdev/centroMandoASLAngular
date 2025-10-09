@@ -33,7 +33,14 @@ export class ProyectosComponent implements OnInit {
     }).subscribe({
       next: resp => {
         this.cargando = false;
-        this.proyectos = resp.status ? resp.proyectos : [];
+
+        const limpiar = (d: any) => (!d || d === '0000-00-00 00:00:00') ? null : d;
+
+        this.proyectos = (resp.status ? resp.proyectos : []).map((p: any) => ({
+          ...p,
+          fecha_inicio: limpiar(p.fecha_inicio),
+          fecha_fin: limpiar(p.fecha_fin),
+        }));
       },
       error: () => {
         this.cargando = false;

@@ -1,0 +1,96 @@
+/* ====== LAYOUT GENERAL (pantalla) ====== */
+.factura-a4 {
+  background: #fff;
+  color: #171717;
+  border-radius: 10px;
+  /* aire interno similar al mock */
+  padding: 22mm 24mm;
+  box-shadow: 0 12px 36px rgba(17, 24, 39, 0.14);
+  min-height: 260mm;
+  line-height: 1.55;
+  font-size: 12.2px;
+}
+
+/* encabezado con respiro */
+.factura-header {
+  margin-bottom: 16mm;
+}
+.factura-header .brand {
+  display: flex; gap: 14px; align-items: center;
+}
+.logo-emisor { height: 58px; width: auto; object-fit: contain; }
+.emisor-lines .name { font-weight: 700; letter-spacing: .15px; }
+.emisor-lines .muted { color: #6b7280; }
+
+/* secciones receptor / cfdi */
+.section-title { font-weight: 700; margin-bottom: 6px; }
+.kv  { margin: 0; }
+.kv b { font-weight: 700; }
+
+/* ====== TABLA DE CONCEPTOS ====== */
+.table {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden; /* esquinas redondeadas */
+  margin-bottom: 12mm;
+}
+.table thead th {
+  background: #f7f7f8;
+  border-bottom: 1px solid #e5e7eb;
+  font-weight: 700;
+  padding: 11px 12px;
+}
+.table tbody td {
+  border-top: 1px solid #f1f5f9;
+  padding: 12px;
+}
+.table .text-end { text-align: right; }
+
+/* ====== TOTALES A LA DERECHA ====== */
+.totales-box {
+  margin-left: auto;
+  width: 68mm;                 /* ancho fijo limpio */
+}
+.totales-box table { width: 100%; }
+.totales-box td {
+  padding: 8px 0;
+}
+.totales-box .sep {
+  border-top: 1px solid #e5e7eb;
+  margin: 6px 0 10px;
+}
+.totales-box .label { text-align: right; color: #4b5563; }
+.totales-box .amount { text-align: right; font-weight: 600; }
+.totales-box .grand .label { font-weight: 700; }
+.totales-box .grand .amount { font-size: 17px; font-weight: 800; }
+
+/* Powered by (discreto) */
+.powered-by {
+  margin-top: 18mm;
+  font-size: 11.5px;
+  color: #9ca3af;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.powered-by img { height: 22px; width: auto; }
+
+/* ====== IMPRESIÓN ====== */
+@media print {
+  @page {
+    /* márgenes grandes como el mock */
+    margin: 28mm 24mm 28mm 24mm;
+    size: A4 portrait;
+  }
+  html, body { background: #fff !important; }
+  .no-print { display: none !important; }
+
+  .factura-a4 {
+    box-shadow: none !important;
+    border-radius: 0;
+    /* padding interno similar al mock ya con los márgenes de @page */
+    padding: 0;
+  }
+
+  /* misma densidad en impresión */
+  .table thead th { padding: 11px 12px; }
+  .table tbody td { padding: 12px; }
+}

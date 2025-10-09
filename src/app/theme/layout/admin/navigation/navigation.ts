@@ -40,6 +40,16 @@ export const NavigationItems: NavigationItem[] = [
     icon: 'icon-navigation',
     children: [
       {
+        id: 'clientes',
+        title: 'Clientes',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/clientes',
+        icon: 'ti ti-user',
+        breadcrumbs: false
+      },
+
+      {
         id: 'gastos',
         title: 'Gastos',
         type: 'item',
@@ -64,15 +74,6 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/facturas',
         icon: 'ti ti-file-invoice',
-        breadcrumbs: false
-      },
-      {
-        id: 'pagos',
-        title: 'Pagos',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/pagos',
-        icon: 'ti ti-cash-banknote',
         breadcrumbs: false
       },
       {

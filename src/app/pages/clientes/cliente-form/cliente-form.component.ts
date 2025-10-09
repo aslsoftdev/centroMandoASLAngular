@@ -15,6 +15,7 @@ import { API_ENDPOINTS } from 'src/app/core/config/constants';
 import { FormFieldComponent } from 'src/app/shared/components/form-field/form-field.component';
 import { TelefonosComponent } from 'src/app/shared/components/telefonos/telefonos.component';
 import { DomiciliosComponent } from 'src/app/shared/components/domicilios/domicilios.component';
+import { DatosFiscalesComponent } from "src/app/shared/components/datos-fiscales/datos-fiscales.component";
 
 interface TipoCliente {
   id_tipo_cliente: number;
@@ -30,8 +31,9 @@ interface TipoCliente {
     RouterModule,
     FormFieldComponent,
     TelefonosComponent,
-    DomiciliosComponent
-  ],
+    DomiciliosComponent,
+    DatosFiscalesComponent
+],
   templateUrl: './cliente-form.component.html',
   styleUrls: ['./cliente-form.component.scss']
 })

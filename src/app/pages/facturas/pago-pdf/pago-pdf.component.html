@@ -1,0 +1,155 @@
+<div class="container my-3">
+  <!-- Acciones -->
+  <div class="d-flex justify-content-end gap-2 no-print mb-3">
+    <a class="btn btn-secondary btn-sm" [routerLink]="['/pagos']">Volver</a>
+    <button class="btn btn-primary btn-sm" (click)="imprimirPdf()">
+      <i class="ti ti-printer me-1"></i> Imprimir / PDF
+    </button>
+  </div>
+
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="text-center my-5">
+    <div class="spinner-border" role="status"><span class="visually-hidden">Cargando…</span></div>
+  </div>
+
+  <!-- Documento -->
+  <div #pdfRoot class="a4-sheet" *ngIf="!cargando">
+    <!-- Encabezado -->
+    <div class="d-flex align-items-start justify-content-between">
+      <div class="d-flex align-items-start gap-3">
+        <img *ngIf="emisor.logoUrl" [src]="emisor.logoUrl" class="logo-emisor" alt="logo" />
+        <div>
+          <div class="fw-bold fs-5">{{ emisor.nombre }}</div>
+          <div class="small">RFC: {{ emisor.rfc }}</div>
+          <div class="small">{{ emisor.regimen }}</div>
+          <div class="small">{{ emisor.direccion }}</div>
+        </div>
+      </div>
+
+      <div class="text-end">
+        <div class="fs-4 fw-bold">RECIBO DE PAGO</div>
+        <div><strong>Folio:</strong> RP-{{ folio }}</div>
+        <div><strong>Fecha:</strong> {{ fecha_pago || '—' }}</div>
+        <div><strong>Estado:</strong> {{ estado || '—' }}</div>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Receptor / Datos del pago -->
+    <div class="row mb-3">
+      <div class="col-7">
+        <div class="fw-semibold">Cliente</div>
+        <div class="small"><strong>Nombre:</strong> {{ nombre_cliente || '—' }}</div>
+      </div>
+      <div class="col-5">
+        <div class="fw-semibold">Pago</div>
+        <div class="small"><strong>Método:</strong> {{ metodo || '—' }}</div>
+        <div class="small"><strong>Importe:</strong> {{ importe | currency:'MXN':'symbol-narrow':'1.2-2' }}</div>
+      </div>
+    </div>
+
+    <!-- Detalles (aplicaciones del pago) -->
+    <div class="fw-semibold mb-1">Aplicación del pago</div>
+    <table class="table table-sm align-middle border">
+      <thead class="table-light">
+        <tr>
+          <th style="width:10rem;">Tipo</th>
+          <th style="width:8rem;">ID</th>
+          <th>Descripción</th>
+          <th style="width:12rem;" class="text-end">Importe aplicado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of detalles">
+          <td>
+            <span class="badge bg-secondary" *ngIf="+d.tabla===1">Factura</span>
+            <span class="badge bg-info" *ngIf="+d.tabla!==1">Tabla {{ d.tabla }}</span>
+          </td>
+          <td>
+            <ng-container *ngIf="+d.tabla===1">
+              FAC-{{ d.id_factura }}
+            </ng-container>
+            <ng-container *ngIf="+d.tabla!==1">
+              {{ d.clave_tabla }}
+            </ng-container>
+          </td>
+          <td class="small">
+            <div *ngIf="d.nombre_cliente">Cliente: {{ d.nombre_cliente }}</div>
+            <div *ngIf="d.fecha_factura">Fecha factura: {{ d.fecha_factura }}</div>
+          </td>
+          <td class="text-end">
+            {{ d.importe | currency:'MXN':'symbol-narrow':'1.2-2' }}
+          </td>
+        </tr>
+
+        <tr *ngIf="!detalles?.length">
+          <td colspan="4" class="text-center text-muted">Sin aplicaciones.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Totales -->
+    <div class="row justify-content-end">
+      <div class="col-6 col-md-4">
+        <table class="table table-sm totales">
+          <tbody>
+            <tr>
+              <td class="text-end">Importe del pago:</td>
+              <td class="text-end fw-semibold">
+                {{ importe | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </td>
+            </tr>
+            <tr>
+              <td class="text-end">Total aplicado:</td>
+              <td class="text-end fw-semibold">
+                {{ total_aplicado | currency:'MXN':'symbol-narrow':'1.2-2' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Resumen proyecto (si existe) -->
+    <div *ngIf="extra?.proyecto" class="mt-2">
+      <div class="fw-semibold mb-1">Proyecto</div>
+      <div class="small mb-2">
+        <strong>{{ extra.proyecto?.nombre_proyecto || ('Proyecto #' + extra.proyecto?.id_proyecto) }}</strong>
+      </div>
+
+      <div class="row justify-content-end">
+        <div class="col-6 col-md-4">
+          <table class="table table-sm totales">
+            <tbody>
+              <tr>
+                <td class="text-end">Total proyecto:</td>
+                <td class="text-end fw-semibold">
+                  {{ extra.proyecto_total | currency:'MXN':'symbol-narrow':'1.2-2' }}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-end">Abonos proyecto:</td>
+                <td class="text-end fw-semibold">
+                  {{ extra.proyecto_abonos | currency:'MXN':'symbol-narrow':'1.2-2' }}
+                </td>
+              </tr>
+              <tr class="table-light">
+                <td class="text-end fw-bold">Saldo proyecto:</td>
+                <td class="text-end fs-6 fw-bold">
+                  {{ extra.proyecto_saldo | currency:'MXN':'symbol-narrow':'1.2-2' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Powered by -->
+    <div class="powered-by">
+      <span>Tecnología impulsada por</span>
+      <img [src]="emisor.logoUrl" alt="ASL Logo" />
+    </div>
+  </div>
+</div>

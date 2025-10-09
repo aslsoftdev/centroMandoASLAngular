@@ -35,7 +35,7 @@
             <tbody>
               <tr *ngFor="let p of proyectos">
                 <td>{{ p.id_proyecto }}</td>
-                <td>{{ p.cliente_nombre || ('#' + p.cliente) }}</td>
+                <td>{{ p.nombre_cliente || ('#' + p.cliente) }}</td>
                 <td>{{ p.nombre_proyecto }}</td>
                 <td>{{ p.subtotal | currency }}</td>
                 <td>{{ p.iva | currency }}</td>

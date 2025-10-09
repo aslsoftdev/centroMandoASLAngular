@@ -1,0 +1,157 @@
+<div class="container my-3">
+  <!-- Barra de acciones (NO sale en impresión) -->
+  <div class="d-flex justify-content-end gap-2 no-print mb-3">
+    <a class="btn btn-secondary btn-sm" [routerLink]="['/facturas']">
+      Volver
+    </a>
+    <button class="btn btn-primary btn-sm" (click)="descargarPdf()">
+      <i class="ti ti-printer me-1"></i> Imprimir / PDF
+    </button>
+  </div>
+
+  <!-- Cargando -->
+  <div *ngIf="cargando" class="text-center my-5">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando…</span>
+    </div>
+  </div>
+
+  <!-- Documento -->
+  <div class="factura-a4" *ngIf="!cargando">
+    <!-- Envoltorio que mandamos al PDF -->
+    <div #facturaEl>
+      <!-- Encabezado -->
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-3">
+          <img *ngIf="emisor.logoUrl" [src]="emisor.logoUrl" class="logo-emisor" alt="Logo">
+          <div>
+            <div class="fw-bold fs-5">{{ emisor.nombre }}</div>
+            <div class="small">RFC: {{ emisor.rfc }}</div>
+            <div class="small">{{ emisor.regimen }}</div>
+            <div class="small">{{ emisor.direccion }}</div>
+          </div>
+        </div>
+        <div class="text-end">
+          <div class="fs-4 fw-bold">FACTURA</div>
+          <div><strong>Serie/Folio:</strong> {{ serie }}-{{ folio }}</div>
+          <div><strong>Fecha:</strong> {{ fecha_emision || '—' }}</div>
+          <div><strong>Lugar expedición:</strong> {{ lugar_expedicion }}</div>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- Receptor / CFDI -->
+      <div class="row mb-3">
+        <div class="col-7">
+          <div class="fw-semibold">Receptor</div>
+          <div class="small"><strong>Nombre:</strong> {{ receptor.nombre || '—' }}</div>
+          <div class="small"><strong>RFC:</strong> {{ receptor.rfc || '—' }}</div>
+          <div class="small"><strong>Domicilio fiscal:</strong> {{ receptor.domicilio_fiscal || '—' }}</div>
+        </div>
+        <div class="col-5">
+          <div class="fw-semibold">CFDI</div>
+          <div class="small"><strong>Uso CFDI:</strong> {{ uso_cfdi || '—' }}</div>
+          <div class="small"><strong>Forma de pago:</strong> {{ forma_pago || '—' }}</div>
+          <div class="small"><strong>Método de pago:</strong> {{ metodo_pago || '—' }}</div>
+          <div class="small"><strong>Moneda:</strong> {{ moneda }} (TC: {{ tipo_cambio }})</div>
+        </div>
+      </div>
+
+      <!-- Conceptos -->
+      <table class="table table-sm align-middle border conceptos">
+        <thead class="table-light">
+          <tr>
+            <th style="width:8rem;">Cant.</th>
+            <th>Descripción</th>
+            <th style="width:10rem;" class="text-end">P. Unit</th>
+            <th style="width:8rem;" class="text-end">IVA %</th>
+            <th style="width:10rem;" class="text-end">Importe</th>
+            <th style="width:10rem;" class="text-end">IVA</th>
+            <th style="width:10rem;" class="text-end">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let d of detalles">
+            <td>{{ d.cantidad | number:'1.2-2' }}</td>
+            <td>
+              <div class="fw-semibold">{{ d.descripcion }}</div>
+              <div class="small text-muted" *ngIf="d.sat_clave_producto || d.sat_unidad_medida">
+                <span *ngIf="d.sat_clave_producto">Clave SAT: {{ d.sat_clave_producto }}</span>
+                <span *ngIf="d.sat_unidad_medida"> • Unidad SAT: {{ d.sat_unidad_medida }}</span>
+              </div>
+            </td>
+            <td class="text-end">{{ d.precio | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+            <td class="text-end">{{ (d.tasa_iva ?? 16) | number:'1.0-0' }}%</td>
+            <td class="text-end">{{ (d.subtotal ?? (d.cantidad*d.precio)) | number:'1.2-2' }}</td>
+            <td class="text-end">{{ (d.iva_cobrado ?? ((d.cantidad*d.precio)*((d.tasa_iva??16)/100))) | number:'1.2-2' }}</td>
+            <td class="text-end">{{ (d.total ?? ((d.cantidad*d.precio)*(1+(d.tasa_iva??16)/100))) | number:'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Totales -->
+      <div class="row justify-content-end mt-2">
+        <div class="col-6 col-md-4">
+          <table class="table table-sm totales">
+            <tbody>
+              <tr>
+                <td class="text-end">Subtotal:</td>
+                <td class="text-end fw-semibold">{{ subtotal | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+              </tr>
+              <tr>
+                <td class="text-end">IVA:</td>
+                <td class="text-end fw-semibold">{{ iva | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+              </tr>
+              <tr class="table-light">
+                <td class="text-end fw-bold">Total:</td>
+                <td class="text-end fs-5 fw-bold">{{ total | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pagos (si existen) -->
+      <div class="row mt-3" *ngIf="pagos?.length">
+        <div class="col-12">
+          <h6 class="mb-2">Pagos</h6>
+          <table class="table table-sm align-middle border pagos">
+            <thead class="table-light">
+              <tr>
+                <th style="width:7rem;"># Pago</th>
+                <th style="width:12rem;">Fecha</th>
+                <th>Método</th>
+                <th style="width:12rem;" class="text-end">Importe</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of pagos">
+                <td>{{ p.id_pago }}</td>
+                <td>{{ p.fecha_registro ? (p.fecha_registro | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+                <td>{{ p.nombre_metodo || '—' }}</td>
+                <td class="text-end">{{ p.importe | currency:'MXN':'symbol-narrow':'1.2-2' }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="table-light">
+                <th colspan="3" class="text-end">Total pagado:</th>
+                <th class="text-end">{{ totalPagado | currency:'MXN':'symbol-narrow':'1.2-2' }}</th>
+              </tr>
+              <tr class="table-light">
+                <th colspan="3" class="text-end">Saldo:</th>
+                <th class="text-end">{{ saldo | currency:'MXN':'symbol-narrow':'1.2-2' }}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Powered by -->
+      <div class="powered-by">
+        <span>Tecnología impulsada por</span>
+        <img [src]="emisor.logoUrl" alt="ASL">
+      </div>
+    </div>
+  </div>
+</div>

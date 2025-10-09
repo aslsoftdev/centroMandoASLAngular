@@ -60,8 +60,9 @@
             </div>
 
             <!-- Teléfonos y domicilios si ya se guardó -->
-            <app-telefonos *ngIf="mostrarExtras" [tabla]="2" [claveTabla]="idCliente"></app-telefonos>
-            <app-domicilios *ngIf="mostrarExtras" [tabla]="2" [claveTabla]="idCliente"></app-domicilios>
+            <app-telefonos *ngIf="mostrarExtras" [tabla]="4" [claveTabla]="idCliente"></app-telefonos>
+            <app-domicilios *ngIf="mostrarExtras" [tabla]="4" [claveTabla]="idCliente"></app-domicilios>
+            <app-datos-fiscales *ngIf="mostrarExtras" [tabla]="4" [claveTabla]="idCliente"></app-datos-fiscales>
 
           </div>
         </form>

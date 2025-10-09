@@ -1,0 +1,59 @@
+/* Hoja A4 con buen padding (coincidirá con pdf) */
+.a4-sheet {
+  background: #fff;
+  color: #111;
+  border-radius: 8px;
+  padding: 22mm 18mm 26mm 18mm; // pantalla
+  box-shadow: 0 8px 28px rgba(17, 24, 39, 0.12);
+  min-height: 260mm;
+}
+
+/* Logo */
+.logo-emisor {
+  height: 58px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Tablas */
+.table { margin-bottom: 0.75rem; border-color: #e9ecef; }
+.table > :not(caption) > * > * { padding: 0.5rem 0.6rem; }
+.table-light th { background-color: #f8f9fa !important; }
+.totales td { padding-top: .35rem; padding-bottom: .35rem; }
+
+/* No imprimir botones */
+.no-print { print-color-adjust: exact; }
+
+/* Powered by (más discreto) */
+.powered-by {
+  margin-top: 10mm;
+  font-size: .85rem;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+.powered-by img {
+  height: 22px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* Impresión */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 18mm 16mm 24mm 16mm; /* márgenes normales en PDF */
+  }
+
+  html, body { background: #fff !important; }
+
+  .no-print { display: none !important; }
+
+  .a4-sheet {
+    box-shadow: none !important;
+    border-radius: 0;
+    padding: 0; /* lo controla @page */
+  }
+}

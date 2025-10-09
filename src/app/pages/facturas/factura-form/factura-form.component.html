@@ -1,0 +1,337 @@
+<div class="card shadow-sm border-0">
+
+  <!-- Header con tabs (si es edición) + botón Guardar -->
+  <div class="card-header d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center">
+      <ul *ngIf="editMode" class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="activeTab==='general'" (click)="activeTab='general'">General</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="activeTab==='pagos'" (click)="activeTab='pagos'">Pagos</a>
+        </li>
+      </ul>
+    </div>
+
+    <button class="btn btn-success btn-sm" (click)="guardar()" [disabled]="cargando">
+      <i class="ti ti-device-floppy me-1"></i> Guardar
+    </button>
+  </div>
+
+  <div class="card-body">
+
+    <!-- GENERAL -->
+    <ng-container *ngIf="!editMode || activeTab==='general'">
+
+      <!-- Encabezado -->
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label">Cliente *</label>
+          <select class="form-select" [(ngModel)]="cliente" (ngModelChange)="onClienteChange()">
+            <option [ngValue]="0">Seleccione…</option>
+            <option *ngFor="let c of clientes" [ngValue]="c.id">{{ c.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Proyecto</label>
+          <select class="form-select" [(ngModel)]="proyecto" [disabled]="proyectos.length === 0">
+            <option [ngValue]="0">-- Ninguno --</option>
+            <option *ngFor="let p of proyectos" [ngValue]="p.id">{{ p.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Fecha factura *</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="fecha_factura" />
+        </div>
+
+        <!-- Dato fiscal + Forma + Método + Uso (opcionales) -->
+        <div class="col-xl-3 col-lg-3 col-md-6">
+          <label class="form-label">Dato fiscal</label>
+          <select class="form-select" [(ngModel)]="dato_fiscal" [disabled]="cliente==0"
+            (ngModelChange)="onDatoFiscalChange()">
+            <option [ngValue]="0">-- Ninguno --</option>
+            <option *ngFor="let df of datosFiscales" [ngValue]="df.id">{{ df.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6">
+          <label class="form-label">Forma de pago</label>
+          <select class="form-select" [(ngModel)]="sat_forma_pago">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of formasPago" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6">
+          <label class="form-label">Método de pago</label>
+          <select class="form-select" [(ngModel)]="sat_metodo_pago">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of metodosPago" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+
+        <div class="col-xl-3 col-lg-3 col-md-6">
+          <label class="form-label">Uso CFDI</label>
+          <select class="form-select" [(ngModel)]="sat_uso_cfdi">
+            <option [ngValue]="null">Seleccione…</option>
+            <option *ngFor="let o of usosCfdi" [ngValue]="o.id">{{ o.nombre }}</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="my-4">
+
+      <!-- Detalles -->
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="mb-0">Conceptos</h6>
+        <button class="btn btn-dark btn-sm" type="button" (click)="agregarRenglon()">
+          <i class="ti ti-plus me-1"></i> Agregar concepto
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm align-middle">
+          <thead>
+            <tr>
+              <th style="width: 6rem;">Cant.</th>
+              <th>Descripción</th>
+              <th style="width: 10rem;">Precio</th>
+              <th style="width: 8rem;">Tasa IVA</th>
+              <th style="width: 10rem;">Importe</th>
+              <th style="width: 10rem;">IVA</th>
+              <th style="width: 10rem;">Total</th>
+              <th style="width: 18rem;">Clave Prod/Serv SAT</th>
+              <th style="width: 14rem;">Unidad SAT</th>
+              <th style="width: 3rem;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let d of detalles; let i = index">
+              <td>
+                <input type="number" min="0" step="0.01" class="form-control form-control-sm" [(ngModel)]="d.cantidad"
+                  (ngModelChange)="onCambioDetalle()" />
+              </td>
+
+              <td>
+                <input type="text" class="form-control form-control-sm" [(ngModel)]="d.descripcion" />
+              </td>
+
+              <td>
+                <input type="number" min="0" step="0.01" class="form-control form-control-sm" [(ngModel)]="d.precio"
+                  (ngModelChange)="onCambioDetalle()" />
+              </td>
+
+              <td>
+                <select class="form-select form-select-sm" [(ngModel)]="d.tasa_iva" (ngModelChange)="onCambioDetalle()">
+                  <option [ngValue]="0">0%</option>
+                  <option [ngValue]="8">8%</option>
+                  <option [ngValue]="16">16%</option>
+                </select>
+              </td>
+
+              <td>
+                <input class="form-control form-control-sm" [value]="rowSubtotal(d) | number:'1.2-2'" readonly />
+              </td>
+              <td>
+                <input class="form-control form-control-sm" [value]="rowIva(d) | number:'1.2-2'" readonly />
+              </td>
+              <td>
+                <input class="form-control form-control-sm" [value]="rowTotal(d) | number:'1.2-2'" readonly />
+              </td>
+
+              <td>
+                <select class="form-select form-select-sm" [(ngModel)]="d.sat_clave_producto"
+                  (ngModelChange)="onCambioDetalle()">
+                  <option [ngValue]="0">-- Seleccione --</option>
+                  <option *ngFor="let ps of productosServicios" [ngValue]="ps.id">
+                    {{ ps.nombre }}
+                  </option>
+                </select>
+              </td>
+
+              <td>
+                <select class="form-select form-select-sm" [(ngModel)]="d.sat_unidad_medida"
+                  (ngModelChange)="onCambioDetalle()">
+                  <option [ngValue]="0">-- Seleccione --</option>
+                  <option *ngFor="let u of clavesUnidad" [ngValue]="u.id">
+                    {{ u.nombre }}
+                  </option>
+                </select>
+              </td>
+
+              <td class="text-end">
+                <button class="btn btn-outline-danger btn-sm" (click)="eliminarRenglon(i)"
+                  [disabled]="detalles.length === 1">
+                  <i class="ti ti-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Totales -->
+      <div class="row g-2 justify-content-end">
+        <div class="col-md-4">
+          <div class="d-flex justify-content-between">
+            <span>Subtotal:</span>
+            <strong>{{ subtotal | currency:'MXN' }}</strong>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span>IVA:</span>
+            <strong>{{ iva | currency:'MXN' }}</strong>
+          </div>
+          <div class="d-flex justify-content-between fs-5 border-top pt-2">
+            <span>Total:</span>
+            <strong>{{ total | currency:'MXN' }}</strong>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- PAGOS -->
+    <ng-container *ngIf="editMode && activeTab==='pagos'">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Pagos registrados</h6>
+        <button class="btn btn-sm btn-success" (click)="abrirModalPago()">
+          <i class="ti ti-plus me-1"></i> Agregar pago
+        </button>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <div class="text-muted">Total factura</div>
+              <div class="fs-4 fw-bold">{{ total | currency:'MXN' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <div class="text-muted">Pagado</div>
+              <div class="fs-4 fw-bold">{{ totalPagado | currency:'MXN' }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body">
+              <div class="text-muted">Saldo</div>
+              <div class="fs-4 fw-bold text-danger">{{ saldo | currency:'MXN' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Método</th>
+            <th>Importe</th>
+            <th>Fecha</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of pagos">
+            <td>{{ p.id_pago }}</td>
+            <td>{{ p.nombre_metodo }}</td>
+            <td>{{ p.importe | currency:'MXN' }}</td>
+            <td>{{ p.fecha_pago ? (p.fecha_pago | date:'dd/MM/yyyy HH:mm') : '—' }}</td>
+            <td class="text-end">
+
+              <button class="btn btn-link-primary" [routerLink]="['/pagos/pdf', p.id_pago]" title="Recibo PDF">
+                <i class="ti ti-file-invoice"></i>
+              </button>
+
+              <button class="btn btn-link-danger" (click)="cambiarEstadoPago(p)"
+                [title]="+p.estado_actual === 3 ? 'Activar' : 'Archivar'">
+                <i [class]="+p.estado_actual === 3 ? 'ti ti-power' : 'ti ti-archive'"></i>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="pagos.length === 0">
+            <td colspan="5" class="text-center text-muted">Sin pagos registrados.</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </ng-container>
+
+    <!-- Loader -->
+    <div *ngIf="cargando" class="text-center mt-3">
+      <img src="assets/images/loading.gif" width="50" />
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Agregar pago -->
+<ng-template [ngIf]="mostrarModalPago">
+  <div class="modal-backdrop fade show"></div>
+  <div class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content" style="background-color: #fff;">
+        <div class="modal-header">
+          <h5 class="modal-title">Agregar Pago</h5>
+          <button type="button" class="btn-close" (click)="cerrarModalPago()"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-4 text-center">
+            <div class="text-muted">Saldo pendiente</div>
+            <div class="display-5 fw-bold text-danger">
+              {{ saldo | currency:'MXN':'symbol-narrow':'1.2-2' }}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Método de pago</label>
+            <select class="form-select" [(ngModel)]="nuevoPago.metodo_pago">
+              <option [ngValue]="null">Selecciona...</option>
+              <option *ngFor="let m of metodosPagos" [ngValue]="m.id_metodo_pago">
+                {{ m.nombre_metodo }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Cuenta</label>
+            <select class="form-select" [(ngModel)]="nuevoPago.cuenta">
+              <option [ngValue]="null">Selecciona...</option>
+              <option *ngFor="let c of cuentas" [ngValue]="c.id_cuenta">
+                {{ c.nombre_cuenta }} — {{ c.saldo | currency:'MXN':'symbol-narrow' }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Fecha de pago</label>
+            <input type="datetime-local" class="form-control" [(ngModel)]="nuevoPago.fecha_pago" />
+            <div class="form-text">Por defecto: ahora.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Importe</label>
+            <app-input-money [(ngModel)]="nuevoPago.importe" [ngClass]="{ 'is-invalid': importeInvalido }">
+            </app-input-money>
+            <div class="invalid-feedback">
+              El importe no puede ser mayor al saldo pendiente.
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-primary" (click)="confirmarAgregarPago()"
+            [disabled]="!nuevoPago.metodo_pago || !nuevoPago.cuenta || !nuevoPago.importe || !nuevoPago.fecha_pago || importeInvalido">
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
