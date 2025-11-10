@@ -1,0 +1,120 @@
+<!-- pages/180pos/suscripciones/suscripcion-form/suscripcion-form.component.html -->
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0 position-relative">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{ esEdicion ? 'Editar Suscripción' : 'Nueva Suscripción' }}</h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" class="loader-img" alt="Cargando..." />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Empresa ASL -->
+            <div class="col-md-6">
+              <label class="form-label">Empresa ASL</label>
+              <select class="form-select" formControlName="empresa_asl"
+                      [ngClass]="{'is-invalid': form.get('empresa_asl')?.invalid && form.get('empresa_asl')?.touched}">
+                <option [ngValue]="null" disabled>
+                  {{ cargandoEmpresas ? 'Cargando…' : (empresas.length ? 'Seleccione…' : 'Sin empresas') }}
+                </option>
+                <option *ngFor="let e of empresas" [ngValue]="e.id">{{ e.nombre }}</option>
+              </select>
+              <div class="invalid-feedback">La empresa es obligatoria.</div>
+            </div>
+
+            <!-- Frecuencia -->
+            <div class="col-md-3">
+              <label class="form-label">Frecuencia</label>
+              <select class="form-select" formControlName="frecuencia"
+                      [ngClass]="{'is-invalid': form.get('frecuencia')?.invalid && form.get('frecuencia')?.touched}">
+                <option [ngValue]="null" disabled>
+                  {{ cargandoFrecuencias ? 'Cargando…' : (frecuencias.length ? 'Seleccione…' : 'Sin frecuencias') }}
+                </option>
+                <option *ngFor="let f of frecuencias" [ngValue]="f.id">{{ f.nombre }}</option>
+              </select>
+              <div class="invalid-feedback">La frecuencia es obligatoria.</div>
+            </div>
+
+            <!-- Importe -->
+            <div class="col-md-3">
+              <label class="form-label">Importe</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" step="0.01" class="form-control" formControlName="importe"
+                       [ngClass]="{'is-invalid': form.get('importe')?.invalid && form.get('importe')?.touched}" />
+              </div>
+              <div class="invalid-feedback">El importe es obligatorio y debe ser ≥ 0.</div>
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-6">
+              <label class="form-label d-block">Estado</label>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox"
+                       [checked]="form.value.estado_actual === 2"
+                       (change)="form.patchValue({ estado_actual: $any($event.target).checked ? 2 : 3 })" />
+                <label class="form-check-label">
+                  {{ form.value.estado_actual === 2 ? 'Activo' : 'Archivado' }}
+                </label>
+              </div>
+            </div>
+
+            <!-- Características -->
+            <div class="col-12">
+              <label class="form-label">Características incluidas</label>
+              <div class="bg-light border rounded p-3">
+                <div *ngIf="cargandoCaracteristicas" class="text-muted">Cargando características…</div>
+                <div *ngIf="!cargandoCaracteristicas && caracteristicasVM.length === 0" class="text-muted">
+                  No hay características disponibles.
+                </div>
+
+                <div class="row g-2" *ngIf="!cargandoCaracteristicas && caracteristicasVM.length">
+                  <div class="col-md-6" *ngFor="let c of caracteristicasVM">
+                    <div class="d-flex align-items-start gap-2 p-2 bg-white border rounded">
+                      <div class="form-check mt-1">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               [checked]="c.seleccionado"
+                               (change)="toggleCaracteristica(c, $any($event.target).checked)"
+                               [id]="'car_'+c.id_caracteristica" />
+                      </div>
+                      <div class="flex-grow-1">
+                        <label class="form-check-label fw-semibold" [for]="'car_'+c.id_caracteristica">
+                          {{ c.nombre_caracteristica }}
+                        </label>
+
+                        <!-- Valor límite si aplica -->
+                        <div *ngIf="c.maneja_limites && c.seleccionado" class="mt-2">
+                          <div class="input-group input-group-sm" style="max-width: 220px;">
+                            <span class="input-group-text">Límite</span>
+                            <input type="number" class="form-control" [(ngModel)]="c.valor_limite" [ngModelOptions]="{standalone:true}">
+                          </div>
+                          <small class="text-muted">Solo si maneja límites.</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Módulo' : 'Nuevo Módulo' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Nombre del módulo -->
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('nombre_modulo')" label="Nombre del módulo"
+                errorText="El nombre es obligatorio.">
+                <input type="text" class="form-control" formControlName="nombre_modulo"
+                  [ngClass]="{ 'is-invalid': form.get('nombre_modulo')?.invalid && form.get('nombre_modulo')?.touched }" />
+              </app-form-field>
+            </div>
+
+            <!-- Nombre técnico -->
+            <div class="col-md-6">
+              <app-form-field [control]="form.get('nombre_tecnico')" label="Nombre técnico"
+                errorText="El nombre técnico es obligatorio.">
+                <input type="text" class="form-control" formControlName="nombre_tecnico"
+                  [ngClass]="{ 'is-invalid': form.get('nombre_tecnico')?.invalid && form.get('nombre_tecnico')?.touched }" />
+              </app-form-field>
+            </div>
+
+            <!-- Permisos asociados -->
+            <div class="col-md-12">
+              <label class="form-label">Permisos asociados</label>
+              <div class="bg-light p-3 border rounded">
+                <div class="form-check form-switch mb-2" *ngFor="let permiso of listaPermisos">
+                  <input class="form-check-input" type="checkbox"
+                    [checked]="form.value.permisos?.includes(permiso.id_permiso)"
+                    (change)="onPermisoChange($event, permiso.id_permiso)" [id]="'permiso_' + permiso.id_permiso" />
+                  <label class="form-check-label" [for]="'permiso_' + permiso.id_permiso">
+                    <strong>{{ permiso.nombre_permiso }}</strong>
+                    <small class="text-muted"> ({{ permiso.nombre_tecnico }})</small>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,5 @@
 export const API_BASE_URL = 'https://aslsoft.dev/clientes/centro_mando_asl/';
+export const API_BASE_URL_180 = 'https://180pos.com.mx/backend/';
 
 export const BASE_PATH = '/admin';
 export const API_ENDPOINTS = {
@@ -15,33 +16,17 @@ export const API_ENDPOINTS = {
   datos_fiscales: `${API_BASE_URL}/api.datos_fiscales.php`,
   pagos: `${API_BASE_URL}/api.pagos.php`,
   
-  categoriasProductos: `${API_BASE_URL}/api.categorias_productos.php`,
-  empresasSucursales: `${API_BASE_URL}/api.empresas.php`,
-  productos: `${API_BASE_URL}/api.productos.php`,
-  listasPrecios: `${API_BASE_URL}/api.listas_precios.php`,
-  turnos: `${API_BASE_URL}/api.turnos.php`,
   tiposClientes: `${API_BASE_URL}/api.tipos_clientes.php`,
   tiposProveedores: `${API_BASE_URL}/api.tipos_proveedores.php`,
   proveedores: `${API_BASE_URL}/api.proveedores.php`,
-  inventarios: `${API_BASE_URL}/api.inventarios.php`,
-  empresas: `${API_BASE_URL}/api.empresas.php`,
-  tamanosProductos: `${API_BASE_URL}/api.tamanos_productos.php`,
-  temperaturasProductos: `${API_BASE_URL}/api.temperaturas_productos.php`,
-  categoriasOpciones: `${API_BASE_URL}/api.categorias_opciones_personalizacion.php`,
-  unidadesPersonalizadas: `${API_BASE_URL}/api.unidades_personalizadas.php`,
-  fotos: `${API_BASE_URL}/api.fotos.php`,
-  descuentosClientes: `${API_BASE_URL}/api.descuentos_clientes.php`,
-  preciosEscalonados: `${API_BASE_URL}/api.precios_escalonados.php`,
   telefonos: `${API_BASE_URL}/api.telefonos.php`,
   domicilios: `${API_BASE_URL}/api.domicilios.php`,
-  entradas: `${API_BASE_URL}/api.entradas_productos.php`,
-  salidas: `${API_BASE_URL}/api.salidas_productos.php`,
-  transferencias: `${API_BASE_URL}/api.transferencias_productos.php`,
-  existencias: `${API_BASE_URL}/api.existencias.php`,
-  kardex: `${API_BASE_URL}/api.kardex.php`,
-  almacenes: `${API_BASE_URL}/api.almacenes.php`,
-  ubicaciones: `${API_BASE_URL}/api.ubicaciones.php`,
-  reportes: `${API_BASE_URL}/api.reportes.php`,
+
+  modulos180POS: `${API_BASE_URL_180}/api.modulos_ASL.php`,
+  permisos180POS: `${API_BASE_URL_180}/api.permisos_ASL.php`,
+  caracteristicas180POS: `${API_BASE_URL_180}/api.caracteristicas_ASL.php`,
+  suscripciones180POS: `${API_BASE_URL_180}/api.suscripciones_ASL.php`,
+  combos180POS: `${API_BASE_URL_180}/api.combos.php`,
 };
 
 export const RUTAS = {

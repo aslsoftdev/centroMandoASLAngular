@@ -84,7 +84,40 @@ export const NavigationItems: NavigationItem[] = [
         url: '/cuentas',
         icon: 'ti ti-building-bank',
         breadcrumbs: false
+      },
+
+      {
+        id: 'modulos',
+        title: 'Módulos 180POS',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/modulos',
+        icon: 'ti ti-puzzle',
+        breadcrumbs: false
+      },
+
+      {
+        id: 'caracteristicas',
+        title: 'Características 180POS',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/caracteristicas',
+        icon: 'ti ti-adjustments', // o 'ti ti-settings'
+        breadcrumbs: false
+      },
+
+      {
+        id: 'suscripciones',
+        title: 'Suscripciones ASL',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/suscripciones',
+        icon: 'ti ti-receipt-2', // opcional: 'ti ti-calendar-repeat'
+        breadcrumbs: false
       }
+
+
+
     ]
   }
 ];

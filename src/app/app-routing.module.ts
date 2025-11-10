@@ -180,6 +180,61 @@ const routes: Routes = [
           import('./pages/facturas/pago-pdf/pago-pdf.component').then(m => m.PagoPdfPageComponent)
       },
 
+      {
+        path: 'modulos',
+        loadComponent: () =>
+          import('./pages/180pos/modulos/modulos.component').then(m => m.ModulosComponent)
+      },
+      {
+        path: 'modulos/nuevo',
+        loadComponent: () =>
+          import('./pages/180pos/modulos/modulo-form/modulo-form.component').then(m => m.ModuloFormComponent)
+      },
+      {
+        path: 'modulos/editar/:id',
+        loadComponent: () =>
+          import('./pages/180pos/modulos/modulo-form/modulo-form.component').then(m => m.ModuloFormComponent)
+      },
+
+      {
+        path: 'caracteristicas',
+        loadComponent: () =>
+          import('./pages/180pos/caracteristicas/caracteristicas.component')
+            .then(m => m.CaracteristicasComponent)
+      },
+      {
+        path: 'caracteristicas/nuevo',
+        loadComponent: () =>
+          import('./pages/180pos/caracteristicas/caracteristica-form/caracteristica-form.component')
+            .then(m => m.CaracteristicaFormComponent)
+      },
+      {
+        path: 'caracteristicas/editar/:id',
+        loadComponent: () =>
+          import('./pages/180pos/caracteristicas/caracteristica-form/caracteristica-form.component')
+            .then(m => m.CaracteristicaFormComponent)
+      },
+
+      {
+        path: 'suscripciones',
+        loadComponent: () =>
+          import('./pages/180pos/suscripciones/suscripciones.component')
+            .then(m => m.SuscripcionesComponent)
+      },
+      {
+        path: 'suscripciones/nuevo',
+        loadComponent: () =>
+          import('./pages/180pos/suscripciones/suscripcion-form/suscripcion-form.component')
+            .then(m => m.SuscripcionFormComponent)
+      },
+      {
+        path: 'suscripciones/editar/:id',
+        loadComponent: () =>
+          import('./pages/180pos/suscripciones/suscripcion-form/suscripcion-form.component')
+            .then(m => m.SuscripcionFormComponent)
+      },
+
+
     ]
   },
 

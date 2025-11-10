@@ -1,0 +1,91 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-end gap-3">
+          <div>
+            <h5 class="mb-0">Suscripciones ASL</h5>
+            <div class="form-check form-switch mt-1">
+              <input class="form-check-input" type="checkbox" id="soloActivos"
+                     [(ngModel)]="soloActivos" (change)="obtenerSuscripciones()" />
+              <label class="form-check-label" for="soloActivos">Solo activos</label>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label mb-1">Empresa ASL</label>
+            <div class="d-flex gap-2">
+              <select class="form-select form-select-sm" [(ngModel)]="filtroEmpresa">
+                <option [ngValue]="null">Todas</option>
+                <option *ngFor="let e of empresas" [ngValue]="e.id">{{ e.nombre }}</option>
+              </select>
+              <button class="btn btn-sm btn-outline-secondary" (click)="obtenerSuscripciones()">Filtrar</button>
+              <button class="btn btn-sm btn-link text-danger" (click)="filtroEmpresa=null; obtenerSuscripciones()">
+                Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <a routerLink="/suscripciones/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Nueva suscripción
+        </a>
+      </div>
+
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div class="placeholder-col" *ngFor="let __ of [1,2,3,4,5,6,7]"></div>
+            </div>
+          </div>
+
+          <table class="table table-hover bg-white" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Empresa</th>
+                <th>Frecuencia</th>
+                <th>Importe</th>
+                <th>Fecha registro</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let s of suscripciones">
+                <td>{{ s.id_suscripcion }}</td>
+                <td>{{ s.nombre_empresa }}</td>
+                <td>{{ s.nombre_frecuencia }}</td>
+                <td>{{ s.importe | number:'1.2-2' }}</td>
+                <td>{{ s.fecha_registro | date:'yyyy-MM-dd HH:mm' }}</td>
+                <td>
+                  <span class="badge" [class.bg-success]="s.estado_actual===2" [class.bg-secondary]="s.estado_actual!==2">
+                    {{ s.nombre_estado }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <a class="btn btn-link-primary" [routerLink]="['/suscripciones/editar', s.id_suscripcion]" title="Editar">
+                    <i class="ti ti-pencil"></i>
+                  </a>
+                  <button class="btn btn-link-danger"
+                          [title]="s.estado_actual===3 ? 'Activar' : 'Archivar'"
+                          (click)="cambiarEstado(s)">
+                    <i class="ti" [ngClass]="s.estado_actual===3 ? 'ti-power' : 'ti-archive'"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="suscripciones.length===0">
+                <td colspan="7" class="text-center text-muted">No hay suscripciones.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

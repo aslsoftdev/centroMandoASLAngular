@@ -1,0 +1,134 @@
+<!-- caracteristicas.component.html -->
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0">Características</h5>
+          <div class="form-check form-switch mt-1">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="soloActivos"
+              [(ngModel)]="soloActivos"
+              (change)="obtenerCaracteristicas()"
+            />
+            <label class="form-check-label" for="soloActivos">Solo activos</label>
+          </div>
+        </div>
+
+        <a routerLink="/caracteristicas/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Agregar característica
+        </a>
+      </div>
+
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+
+          <!-- 🔄 SHIMMER -->
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div class="placeholder-col" *ngFor="let __ of [1,2,3,4,5]"></div>
+            </div>
+          </div>
+
+          <!-- ✅ TABLA EN ÁRBOL -->
+          <table class="table table-hover bg-white" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Nombre técnico</th>
+                <th>Maneja límites</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Grupos: padre + hijos -->
+              <ng-container *ngFor="let g of grupos; trackBy: trackByGrupo">
+
+                <!-- Fila de padre (o encabezado “Sin padre”) -->
+                <tr class="table-group">
+                  <td class="fw-bold">
+                    {{ g.padre ? g.padre.id_caracteristica : '—' }}
+                  </td>
+                  <td class="fw-bold">
+                    {{ g.padre ? g.padre.nombre_caracteristica : 'Sin padre' }}
+                  </td>
+                  <td class="fw-bold">
+                    {{ g.padre ? g.padre.nombre_tecnico : '' }}
+                  </td>
+                  <td>
+                    <span *ngIf="g.padre" class="badge" [ngClass]="g.padre.maneja_limites ? 'bg-success' : 'bg-secondary'">
+                      {{ g.padre.maneja_limites ? 'Sí' : 'No' }}
+                    </span>
+                  </td>
+                  <td [innerHTML]="g.padre ? (g.padre.nombre_estado | estadoBadge) : ''"></td>
+                  <td class="text-center">
+                    <ng-container *ngIf="g.padre">
+                      <a
+                        class="btn btn-link-primary"
+                        title="Editar"
+                        [routerLink]="['/caracteristicas/editar', g.padre.id_caracteristica]"
+                      >
+                        <i class="ti ti-pencil"></i>
+                      </a>
+                      <button
+                        class="btn btn-link-danger"
+                        [title]="g.padre.estado_actual === 3 ? 'Activar' : 'Archivar'"
+                        (click)="cambiarEstado(g.padre)"
+                      >
+                        <i class="ti" [ngClass]="g.padre.estado_actual === 3 ? 'ti-power' : 'ti-archive'"></i>
+                      </button>
+                    </ng-container>
+                  </td>
+                </tr>
+
+                <!-- Hijos -->
+                <tr *ngFor="let c of g.hijos; trackBy: trackByCar" class="child-row">
+                  <td>{{ c.id_caracteristica }}</td>
+                  <td>
+                    <span class="tree-branch">└─</span>
+                    {{ c.nombre_caracteristica }}
+                  </td>
+                  <td>{{ c.nombre_tecnico }}</td>
+                  <td>
+                    <span class="badge" [ngClass]="c.maneja_limites ? 'bg-success' : 'bg-secondary'">
+                      {{ c.maneja_limites ? 'Sí' : 'No' }}
+                    </span>
+                  </td>
+                  <td [innerHTML]="c.nombre_estado | estadoBadge"></td>
+                  <td class="text-center">
+                    <a
+                      class="btn btn-link-primary"
+                      title="Editar"
+                      [routerLink]="['/caracteristicas/editar', c.id_caracteristica]"
+                    >
+                      <i class="ti ti-pencil"></i>
+                    </a>
+                    <button
+                      class="btn btn-link-danger"
+                      [title]="c.estado_actual === 3 ? 'Activar' : 'Archivar'"
+                      (click)="cambiarEstado(c)"
+                    >
+                      <i class="ti" [ngClass]="c.estado_actual === 3 ? 'ti-power' : 'ti-archive'"></i>
+                    </button>
+                  </td>
+                </tr>
+
+              </ng-container>
+
+              <!-- Sin datos -->
+              <tr *ngIf="!grupos || grupos.length === 0">
+                <td colspan="6" class="text-center text-muted">No hay características disponibles.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

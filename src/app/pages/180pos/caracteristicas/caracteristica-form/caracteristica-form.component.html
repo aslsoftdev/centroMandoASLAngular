@@ -1,0 +1,134 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0 position-relative">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Característica' : 'Nueva Característica' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Nombre de la característica -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('nombre_caracteristica')"
+                label="Nombre de la característica"
+                errorText="El nombre es obligatorio."
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_caracteristica"
+                  [ngClass]="{
+                    'is-invalid': form.get('nombre_caracteristica')?.invalid && form.get('nombre_caracteristica')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Nombre técnico -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('nombre_tecnico')"
+                label="Nombre técnico"
+                errorText="El nombre técnico es obligatorio."
+              >
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre_tecnico"
+                  [ngClass]="{
+                    'is-invalid': form.get('nombre_tecnico')?.invalid && form.get('nombre_tecnico')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Tipo de característica -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('tipo_caracteristica')"
+                label="Tipo de característica"
+                errorText="El tipo es obligatorio."
+              >
+                <select
+                  class="form-select"
+                  formControlName="tipo_caracteristica"
+                  [ngClass]="{
+                    'is-invalid': form.get('tipo_caracteristica')?.invalid && form.get('tipo_caracteristica')?.touched
+                  }"
+                >
+                  <option [ngValue]="null" disabled>
+                    {{ cargandoTipos ? 'Cargando tipos…' : 'Seleccione…' }}
+                  </option>
+                  <option
+                    *ngFor="let t of tiposCaracteristica; trackBy: trackByTipo"
+                    [ngValue]="t.id"
+                  >
+                    {{ t.nombre }}
+                  </option>
+                </select>
+              </app-form-field>
+            </div>
+
+            <!-- Característica padre (ID) -->
+            <div class="col-md-6">
+              <app-form-field
+                [control]="form.get('caracteristica_asl')"
+                label="Característica padre (opcional)"
+              >
+                <select
+                  class="form-select"
+                  formControlName="caracteristica_asl"
+                >
+                  <option [ngValue]="null">
+                    {{ cargandoCaracteristicas ? 'Cargando…' : 'Ninguna' }}
+                  </option>
+                  <option
+                    *ngFor="let it of caracteristicasCombo; trackBy: trackByCaracteristica"
+                    [ngValue]="it.id"
+                  >
+                    {{ it.nombre }} ({{ it.tecnico }})
+                  </option>
+                </select>
+              </app-form-field>
+            </div>
+
+            <!-- Maneja límites -->
+            <div class="col-md-12">
+              <label class="form-label d-block">Maneja límites</label>
+              <div class="form-check form-switch">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="maneja_limites"
+                  [checked]="form.value.maneja_limites"
+                  (change)="form.patchValue({ maneja_limites: $any($event.target).checked })"
+                />
+                <label class="form-check-label" for="maneja_limites">
+                  {{ form.value.maneja_limites ? 'Sí' : 'No' }}
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

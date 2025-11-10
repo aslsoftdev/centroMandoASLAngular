@@ -1,0 +1,64 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0">Módulos</h5>
+          <div class="form-check form-switch mt-1">
+            <input class="form-check-input" type="checkbox" id="soloActivos" [(ngModel)]="soloActivos" (change)="obtenerModulos()" />
+            <label class="form-check-label" for="soloActivos">Solo activos</label>
+          </div>
+        </div>
+        <a routerLink="/modulos/nuevo" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Agregar módulo
+        </a>
+      </div>
+
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+
+          <!-- 🔄 SHIMMER -->
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div class="placeholder-col" *ngFor="let __ of [1,2,3,4,5]"></div>
+            </div>
+          </div>
+
+          <!-- ✅ TABLA -->
+          <table class="table table-hover bg-white" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre del Módulo</th>
+                <th>Nombre Técnico</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let modulo of modulos">
+                <td>{{ modulo.id_modulo }}</td>
+                <td>{{ modulo.nombre_modulo }}</td>
+                <td>{{ modulo.nombre_tecnico }}</td>
+                <td [innerHTML]="modulo.nombre_estado | estadoBadge"></td>
+                <td class="text-center">
+                  <a class="btn btn-link-primary" title="Editar" [routerLink]="['/modulos/editar', modulo.id_modulo]">
+                    <i class="ti ti-pencil"></i>
+                  </a>
+                  <button class="btn btn-link-danger" title="{{ modulo.estado_actual === 3 ? 'Activar' : 'Archivar' }}"
+                    (click)="cambiarEstado(modulo)">
+                    <i class="ti" [ngClass]="modulo.estado_actual === 3 ? 'ti-power' : 'ti-archive'"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="modulos.length === 0">
+                <td colspan="5" class="text-center text-muted">No hay módulos disponibles.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
