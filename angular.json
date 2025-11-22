@@ -20,7 +20,7 @@
             "allowedCommonJsDependencies": [
               "apexcharts"
             ],
-            "baseHref": "/admin/",
+            "baseHref": "/clientes/centro_mando_asl/admin/",
             "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
