@@ -39,6 +39,17 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
+
+      {
+        id: 'prospectos',
+        title: 'Prospectos',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/prospectos',
+        icon: 'ti ti-users',
+        breadcrumbs: false
+      },
+
       {
         id: 'clientes',
         title: 'Clientes',
@@ -48,6 +59,37 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ti ti-user',
         breadcrumbs: false
       },
+
+      {
+        id: 'reuniones',
+        title: 'Reuniones',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/reuniones',
+        icon: 'ti ti-calendar',
+        breadcrumbs: false
+      },
+
+      {
+        id: 'caja_fuerte',
+        title: 'Caja Fuerte',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/caja-fuerte',
+        icon: 'ti ti-lock',
+        breadcrumbs: false
+      },
+
+      {
+        id: 'cotizaciones',
+        title: 'Cotizaciones',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/cotizaciones',
+        icon: 'ti ti-file-invoice',
+        breadcrumbs: false
+      },
+
 
       {
         id: 'gastos',
@@ -83,6 +125,17 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/cuentas',
         icon: 'ti ti-building-bank',
+        breadcrumbs: false
+      },
+
+      
+      {
+        id: 'versiones',
+        title: 'Versiones',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/versiones',
+        icon: 'ti ti-package',
         breadcrumbs: false
       },
 

@@ -198,7 +198,7 @@ export class FacturaFormComponent implements OnInit {
 
   cargarDatosFiscalesParaCliente(): void {
     if (!this.cliente) return;
-    this.http.post<any>(API_ENDPOINTS.datos_fiscales, {
+    this.http.post<any>(API_ENDPOINTS.datosFiscales, {
       action: 'lista_datos_fiscales',
       tabla: 4,
       clave_tabla: this.cliente,
@@ -215,7 +215,7 @@ export class FacturaFormComponent implements OnInit {
 
   onDatoFiscalChange(): void {
     if (!this.dato_fiscal) return;
-    this.http.post<any>(API_ENDPOINTS.datos_fiscales, {
+    this.http.post<any>(API_ENDPOINTS.datosFiscales, {
       action: 'obtener_datos_fiscales',
       id_datos_fiscales: this.dato_fiscal,
       usuario: this.usuarioId

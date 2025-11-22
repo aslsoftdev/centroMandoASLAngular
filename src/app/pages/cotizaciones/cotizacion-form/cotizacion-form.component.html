@@ -1,0 +1,216 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Cotización' : 'Nueva Cotización' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Tema (línea grande) -->
+            <div class="col-12">
+              <app-form-field [control]="form.get('tema')" label="Tema" errorText="El tema es obligatorio.">
+                <input type="text" class="form-control form-control-lg" formControlName="tema" [ngClass]="{
+                    'is-invalid':
+                      form.get('tema')?.invalid &&
+                      form.get('tema')?.touched
+                  }" />
+              </app-form-field>
+            </div>
+
+            <!-- Bloque Relacionado + Fecha en una sola línea -->
+            <div class="col-12">
+              <div class="row g-3 align-items-end">
+
+                <!-- Relacionado: tipo -->
+                <div class="col-lg-3 col-md-4">
+                  <app-form-field [control]="form.get('relacionado_tipo')" label="Relacionado con"
+                    errorText="Selecciona el tipo de relación.">
+                    <select class="form-select" formControlName="relacionado_tipo" (change)="onCambioRelacionadoTipo()"
+                      [ngClass]="{
+            'is-invalid':
+              form.get('relacionado_tipo')?.invalid &&
+              form.get('relacionado_tipo')?.touched
+          }">
+                      <option [ngValue]="null">Seleccione...</option>
+                      <option [ngValue]="4">Cliente</option>
+                      <option [ngValue]="6">Prospecto</option>
+                    </select>
+                  </app-form-field>
+                </div>
+
+                <!-- Relacionado: registro (ng-select tipo select2) -->
+                <div class="col-lg-5 col-md-5">
+                  <app-form-field [control]="form.get('relacionado_id')" errorText="Selecciona un registro.">
+                    <ng-select class="ng-select-full custom-ng-select" formControlName="relacionado_id"
+                      [items]="relacionados" bindLabel="nombre" bindValue="id" [searchable]="true" [clearable]="true"
+                      placeholder="Buscar..." [ngClass]="{
+            'is-invalid':
+              form.get('relacionado_id')?.invalid &&
+              form.get('relacionado_id')?.touched
+          }"></ng-select>
+                  </app-form-field>
+                </div>
+
+                <!-- Fecha vencimiento -->
+                <div class="col-lg-4 col-md-3">
+                  <app-form-field [control]="form.get('fecha_vencimiento')" label="Fecha de vencimiento"
+                    errorText="La fecha de vencimiento es obligatoria.">
+                    <input type="date" class="form-control" formControlName="fecha_vencimiento" [ngClass]="{
+            'is-invalid':
+              form.get('fecha_vencimiento')?.invalid &&
+              form.get('fecha_vencimiento')?.touched
+          }" />
+                  </app-form-field>
+                </div>
+
+              </div>
+            </div>
+
+
+            <!-- =========================
+                 DETALLES DE COTIZACIÓN
+                 ========================= -->
+            <div class="col-12">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="mb-0">
+                  <i class="ti ti-list-details me-2"></i> Conceptos de la cotización
+                </h6>
+                <button type="button" class="btn btn-sm btn-outline-primary" (click)="agregarDetalle()">
+                  <i class="ti ti-plus me-1"></i> Agregar concepto
+                </button>
+              </div>
+
+              <div formArrayName="detalles" class="table-responsive">
+                <table class="table table-sm align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width: 8%">Cant.</th>
+                      <th style="width: 24%">Título</th>
+                      <th style="width: 30%">Comentarios</th>
+                      <th style="width: 14%">Precio</th>
+                      <th style="width: 14%">Importe</th>
+                      <th style="width: 5%"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let detCtrl of detalles.controls; let i = index" [formGroupName]="i">
+                      <!-- Cantidad -->
+                      <td>
+                        <input type="number" class="form-control form-control-sm text-end" formControlName="cantidad"
+                          (change)="onDetalleChange(i)" />
+                      </td>
+
+                      <!-- Título -->
+                      <td>
+                        <textarea class="form-control form-control-sm" rows="2" style="resize: vertical;"
+                          formControlName="titulo"></textarea>
+                      </td>
+
+                      <!-- Comentarios -->
+                      <td>
+                        <textarea class="form-control form-control-sm" rows="2" style="resize: vertical;"
+                          formControlName="comentarios"></textarea>
+                      </td>
+
+                      <!-- Precio -->
+                      <td>
+                        <input type="number" class="form-control form-control-sm text-end" formControlName="precio"
+                          (change)="onDetalleChange(i)" />
+                      </td>
+
+                      <!-- Importe -->
+                      <td class="text-end">
+                        $ {{ detCtrl.get('importe')?.value | number: '1.2-2' }}
+                      </td>
+
+                      <!-- Eliminar -->
+                      <td class="text-center">
+                        <button type="button" class="btn btn-link text-danger p-0" (click)="eliminarDetalle(i)">
+                          <i class="ti ti-trash"></i>
+                        </button>
+                      </td>
+                    </tr>
+
+                    <tr *ngIf="detalles.length === 0">
+                      <td colspan="6" class="text-center text-muted">
+                        No hay conceptos agregados.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- =========================
+                 TOTALES
+                 ========================= -->
+            <div class="col-md-4 mt-3 ms-md-auto">
+              <div class="card border-0 bg-light-subtle">
+                <div class="card-body py-3">
+
+                  <!-- Subtotal -->
+                  <div class="d-flex justify-content-between mb-2">
+                    <span class="fw-semibold">Subtotal</span>
+                    <span>$ {{ subtotal | number: '1.2-2' }}</span>
+                  </div>
+
+                  <!-- IVA -->
+                  <div class="mb-2">
+                    <label class="form-label fw-semibold mb-1">IVA</label>
+                    <div class="d-flex align-items-center gap-2">
+                      <select class="form-select form-select-sm w-auto" formControlName="tasa_iva"
+                        (change)="recalcularTotales()">
+                        <option [ngValue]="0">0%</option>
+                        <option [ngValue]="16">16%</option>
+                      </select>
+                      <span class="ms-auto">
+                        $ {{ ivaImporte | number: '1.2-2' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Total -->
+                  <div class="border-top pt-2 d-flex justify-content-between">
+                    <span class="fw-semibold">Total</span>
+                    <span class="fw-bold">
+                      $ {{ total | number: '1.2-2' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12 mt-3">
+              <label class="form-label fw-semibold d-block">Comentarios generales</label>
+
+              <editor apiKey="kees6l5j1oggduhz6iu99cs85gzbpa1u6qbhib9wvlfn0a3l" [init]="tinymceConfig"
+                formControlName="comentarios">
+              </editor>
+
+              <small class="text-muted">
+                Se guarda como HTML. Puedes usar negritas, itálicas, encabezados y listas.
+              </small>
+            </div>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

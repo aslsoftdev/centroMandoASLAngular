@@ -1,0 +1,115 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Prospecto' : 'Nuevo Prospecto' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Nombre del Prospecto -->
+            <div class="col-md-12">
+              <app-form-field [control]="form.get('nombre_prospecto')" label="Nombre del prospecto"
+                errorText="El nombre es obligatorio.">
+                <input type="text" class="form-control" formControlName="nombre_prospecto" [ngClass]="{
+                    'is-invalid':
+                      form.get('nombre_prospecto')?.invalid &&
+                      form.get('nombre_prospecto')?.touched
+                  }" />
+              </app-form-field>
+            </div>
+
+            <!-- Comentarios (opcional) -->
+            <div class="col-md-12">
+              <app-form-field [control]="form.get('comentarios')" label="Comentarios" errorText="">
+                <input type="text" class="form-control" formControlName="comentarios" />
+              </app-form-field>
+            </div>
+
+
+            <app-telefonos *ngIf="mostrarExtras" [tabla]="6" [claveTabla]="idProspecto"></app-telefonos>
+            <app-domicilios *ngIf="mostrarExtras" [tabla]="6" [claveTabla]="idProspecto"></app-domicilios>
+
+            <!-- Línea de tiempo de bitácora -->
+            <div class="row mt-4" *ngIf="esEdicion">
+              <div class="col-md-12">
+                <h6 class="mb-3 d-flex align-items-center">
+                  <i class="ti ti-notes me-2"></i>
+                  Bitácora de seguimiento
+                </h6>
+
+                <div class="card border-0 shadow-sm timeline-wrapper">
+                  <div class="card-body">
+
+                    <!-- Agregar nueva nota -->
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold">Nuevo comentario</label>
+                      <textarea class="form-control" rows="3" formControlName="comentario_bitacora"
+                        placeholder="Escribe el seguimiento o nota..."></textarea>
+
+                      <div class="d-flex justify-content-end mt-2">
+                        <button type="button" class="btn btn-dark btn-sm px-3" (click)="agregarBitacora()">
+                          <i class="ti ti-plus me-1"></i> Agregar a bitácora
+                        </button>
+                      </div>
+                    </div>
+
+                    <hr class="my-3" *ngIf="bitacora.length > 0">
+
+                    <!-- Mensaje sin registros -->
+                    <div *ngIf="bitacora.length === 0" class="text-muted small text-center py-2">
+                      Aún no hay seguimientos registrados.
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="timeline-body" *ngIf="bitacora.length > 0">
+                      <div class="timeline-item d-flex" *ngFor="let b of bitacora; let i = index">
+
+                        <div class="timeline-icon">
+                          <i class="ti ti-message-circle"></i>
+                        </div>
+
+                        <div class="timeline-content">
+                          <div class="timeline-header">
+                            <span class="timeline-date">
+                              {{ b.fecha_registro | date:'dd/MM/yyyy HH:mm' }}
+                            </span>
+
+                            <span class="badge bg-light text-muted" *ngIf="i === 0">
+                              Último movimiento
+                            </span>
+                          </div>
+
+                          <p class="timeline-text">
+                            {{ b.comentario }}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

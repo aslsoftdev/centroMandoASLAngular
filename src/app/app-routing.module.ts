@@ -56,6 +56,22 @@ const routes: Routes = [
         loadComponent: () =>
           import('./pages/usuarios/usuario-form/usuario-form.component').then(m => m.UsuarioFormComponent)
       },
+
+      {
+        path: 'prospectos',
+        loadComponent: () =>
+          import('./pages/prospectos/prospectos.component').then(m => m.ProspectosComponent)
+      },
+      {
+        path: 'prospectos/nuevo',
+        loadComponent: () =>
+          import('./pages/prospectos/prospecto-form/prospecto-form.component').then(m => m.ProspectoFormComponent)
+      },
+      {
+        path: 'prospectos/editar/:id',
+        loadComponent: () =>
+          import('./pages/prospectos/prospecto-form/prospecto-form.component').then(m => m.ProspectoFormComponent)
+      },
   
       {
         path: 'clientes',
@@ -234,7 +250,73 @@ const routes: Routes = [
             .then(m => m.SuscripcionFormComponent)
       },
 
+      {
+        path: 'cotizaciones',
+        loadComponent: () =>
+          import('./pages/cotizaciones/cotizaciones.component').then(
+            m => m.CotizacionesComponent
+          )
+      },
+      {
+        path: 'cotizaciones/nueva',
+        loadComponent: () =>
+          import('./pages/cotizaciones/cotizacion-form/cotizacion-form.component').then(
+            m => m.CotizacionFormComponent
+          )
+      },
+      {
+        path: 'cotizaciones/editar/:id',
+        loadComponent: () =>
+          import('./pages/cotizaciones/cotizacion-form/cotizacion-form.component').then(
+            m => m.CotizacionFormComponent
+          )
+      },
 
+      {
+        path: 'reuniones',
+        loadComponent: () =>
+          import('./pages/reuniones/reuniones.component').then(
+            m => m.ReunionesComponent
+          )
+      },
+      {
+        path: 'reuniones/nueva',
+        loadComponent: () =>
+          import('./pages/reuniones/reunion-form/reunion-form.component').then(
+            m => m.ReunionFormComponent
+          )
+      },
+      {
+        path: 'reuniones/editar/:id',
+        loadComponent: () =>
+          import('./pages/reuniones/reunion-form/reunion-form.component').then(
+            m => m.ReunionFormComponent
+          )
+      },
+
+      {
+        path: 'versiones',
+        loadComponent: () =>
+          import('./pages/versiones/versiones.component').then(
+            m => m.VersionesComponent
+          )
+      },
+
+     {
+        path: 'caja-fuerte',
+        loadComponent: () =>
+          import('./pages/caja-fuerte/caja-fuerte.component').then(
+            m => m.CajaFuerteComponent
+          )
+      },
+
+       {
+        path: 'caja-fuerte/nueva',
+        loadComponent: () =>
+          import('./pages/caja-fuerte/caja-fuerte-form/caja-fuerte-form.component').then(
+            m => m.CajaFuerteFormComponent
+          )
+      },
     ]
   },
 

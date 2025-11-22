@@ -1,0 +1,191 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          {{ esEdicion ? 'Editar Reunión' : 'Nueva Reunión' }}
+        </h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <!-- Tema -->
+            <div class="col-12">
+              <app-form-field
+                [control]="form.get('tema')"
+                label="Tema de la reunión"
+                errorText="El tema es obligatorio."
+              >
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  formControlName="tema"
+                  [ngClass]="{
+                    'is-invalid':
+                      form.get('tema')?.invalid &&
+                      form.get('tema')?.touched
+                  }"
+                />
+              </app-form-field>
+            </div>
+
+            <!-- Relacionado + fecha_inicio -->
+            <div class="col-12">
+              <div class="row g-3 align-items-end">
+
+                <!-- Relacionado: tipo -->
+                <div class="col-lg-3 col-md-4">
+                  <app-form-field
+                    [control]="form.get('relacionado_tipo')"
+                    label="Relacionado con"
+                    errorText="Selecciona el tipo de relación."
+                  >
+                    <select
+                      class="form-select"
+                      formControlName="relacionado_tipo"
+                      (change)="onCambioRelacionadoTipo()"
+                      [ngClass]="{
+                        'is-invalid':
+                          form.get('relacionado_tipo')?.invalid &&
+                          form.get('relacionado_tipo')?.touched
+                      }"
+                    >
+                      <option [ngValue]="null">Seleccione...</option>
+                      <option [ngValue]="4">Cliente</option>
+                      <option [ngValue]="6">Prospecto</option>
+                    </select>
+                  </app-form-field>
+                </div>
+
+                <!-- Relacionado: registro -->
+                <div class="col-lg-5 col-md-5">
+                  <app-form-field
+                    [control]="form.get('relacionado_id')"
+                    errorText="Selecciona un registro."
+                  >
+                    <ng-select
+                      class="ng-select-full custom-ng-select"
+                      formControlName="relacionado_id"
+                      [items]="relacionados"
+                      bindLabel="nombre"
+                      bindValue="id"
+                      [searchable]="true"
+                      [clearable]="true"
+                      placeholder="Buscar..."
+                      [ngClass]="{
+                        'is-invalid':
+                          form.get('relacionado_id')?.invalid &&
+                          form.get('relacionado_id')?.touched
+                      }"
+                    ></ng-select>
+                  </app-form-field>
+                </div>
+
+                <!-- Fecha inicio -->
+                <div class="col-lg-4 col-md-3">
+                  <app-form-field
+                    [control]="form.get('fecha_inicio')"
+                    label="Fecha y hora de inicio"
+                    errorText="La fecha de inicio es obligatoria."
+                  >
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      formControlName="fecha_inicio"
+                      [ngClass]="{
+                        'is-invalid':
+                          form.get('fecha_inicio')?.invalid &&
+                          form.get('fecha_inicio')?.touched
+                      }"
+                    />
+                  </app-form-field>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Fecha fin (opcional) -->
+            <div class="col-12">
+              <div class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                  <app-form-field
+                    [control]="form.get('fecha_fin')"
+                    label="Fecha y hora de fin (opcional)"
+                  >
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      formControlName="fecha_fin"
+                    />
+                  </app-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fechas de llegada (opcionales) -->
+            <div class="col-12">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <app-form-field
+                    [control]="form.get('fecha_llegada_cliente')"
+                    label="Llegada del cliente"
+                  >
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      formControlName="fecha_llegada_cliente"
+                    />
+                  </app-form-field>
+                </div>
+
+                <div class="col-md-6">
+                  <app-form-field
+                    [control]="form.get('fecha_llegada_asl')"
+                    label="Llegada de ASL"
+                  >
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      formControlName="fecha_llegada_asl"
+                    />
+                  </app-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- Minuta -->
+            <div class="col-12 mt-3">
+              <label class="form-label fw-semibold d-block">Minuta de la reunión</label>
+
+              <editor
+                apiKey="kees6l5j1oggduhz6iu99cs85gzbpa1u6qbhib9wvlfn0a3l"
+                [init]="tinymceConfig"
+                formControlName="minuta"
+              >
+              </editor>
+
+              <small class="text-muted">
+                Se guarda como HTML. Puedes usar negritas, listas, encabezados, etc.
+              </small>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

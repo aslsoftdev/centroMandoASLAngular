@@ -1,3 +1,5 @@
+import { version } from "xlsx";
+
 export const API_BASE_URL = 'https://aslsoft.dev/clientes/centro_mando_asl/';
 export const API_BASE_URL_180 = 'https://180pos.com.mx/backend/';
 
@@ -12,15 +14,20 @@ export const API_ENDPOINTS = {
   combos: `${API_BASE_URL}/api.combos.php`,
   proyectos: `${API_BASE_URL}/api.proyectos.php`,
   facturas: `${API_BASE_URL}/api.facturas.php`,
+  prospectos: `${API_BASE_URL}/api.prospectos.php`,
   clientes: `${API_BASE_URL}/api.clientes.php`,
-  datos_fiscales: `${API_BASE_URL}/api.datos_fiscales.php`,
+  cotizaciones: `${API_BASE_URL}/api.cotizaciones.php`,
   pagos: `${API_BASE_URL}/api.pagos.php`,
+  reuniones: `${API_BASE_URL}/api.reuniones.php`,
+  cajaFuerte: `${API_BASE_URL}/api.caja_fuerte.php`,
+  versiones: `${API_BASE_URL}/api.versiones.php`,
   
   tiposClientes: `${API_BASE_URL}/api.tipos_clientes.php`,
   tiposProveedores: `${API_BASE_URL}/api.tipos_proveedores.php`,
   proveedores: `${API_BASE_URL}/api.proveedores.php`,
   telefonos: `${API_BASE_URL}/api.telefonos.php`,
   domicilios: `${API_BASE_URL}/api.domicilios.php`,
+  datosFiscales: `${API_BASE_URL}/api.datos_fiscales.php`,
 
   modulos180POS: `${API_BASE_URL_180}/api.modulos_ASL.php`,
   permisos180POS: `${API_BASE_URL_180}/api.permisos_ASL.php`,

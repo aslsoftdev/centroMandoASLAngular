@@ -92,7 +92,7 @@ export class DatosFiscalesComponent implements OnInit {
   // ───── Listar ─────────────────────────────────────────────────────────────
   obtenerLista(): void {
     this.cargando = true;
-    this.http.post<any>(API_ENDPOINTS.datos_fiscales, {
+    this.http.post<any>(API_ENDPOINTS.datosFiscales, {
       action: 'lista_datos_fiscales',
       tabla: this.tabla,
       clave_tabla: this.claveTabla,
@@ -155,7 +155,7 @@ export class DatosFiscalesComponent implements OnInit {
       Swal.fire('CP inválido', 'El código postal debe tener 5 dígitos.', 'warning'); return;
     }
 
-    this.http.post<any>(API_ENDPOINTS.datos_fiscales, {
+    this.http.post<any>(API_ENDPOINTS.datosFiscales, {
       action: 'guardar_datos_fiscales',
       tabla: this.tabla,
       clave_tabla: this.claveTabla,
@@ -201,7 +201,7 @@ export class DatosFiscalesComponent implements OnInit {
       Swal.fire('CP inválido', 'El código postal debe tener 5 dígitos.', 'warning'); return;
     }
 
-    this.http.post<any>(API_ENDPOINTS.datos_fiscales, {
+    this.http.post<any>(API_ENDPOINTS.datosFiscales, {
       action: 'guardar_datos_fiscales',
       id_datos_fiscales: r.id_datos_fiscales,
       tabla: this.tabla,
@@ -240,7 +240,7 @@ export class DatosFiscalesComponent implements OnInit {
       cancelButtonText: 'Cancelar'
     }).then(res => {
       if (res.isConfirmed) {
-        this.http.post<any>(API_ENDPOINTS.datos_fiscales, {
+        this.http.post<any>(API_ENDPOINTS.datosFiscales, {
           action: 'cambiar_estado',
           id_datos_fiscales: r.id_datos_fiscales,
           estado_actual: 3,

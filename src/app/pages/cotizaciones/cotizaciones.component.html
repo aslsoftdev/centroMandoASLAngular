@@ -1,0 +1,122 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Cotizaciones</h5>
+        <a routerLink="/cotizaciones/nueva" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Nueva cotización
+        </a>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-2">
+        <!-- Filtros -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="form-check form-switch ms-1">
+              <input class="form-check-input" type="checkbox" id="switchSoloActivas" [(ngModel)]="verInactivas"
+                (change)="obtenerCotizaciones()" />
+              <label class="form-check-label" for="switchSoloActivas">
+                {{ verInactivas ? 'Mostrar activas y archivadas' : 'Mostrar sólo activas' }}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar por tema o comentarios..."
+                [(ngModel)]="buscador" (keyup.enter)="filtrar()" />
+              <button class="btn btn-outline-secondary" type="button" (click)="filtrar()">
+                <i class="ti ti-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shimmer -->
+        <div *ngIf="cargando" class="shimmer-container">
+          <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+            <div *ngFor="let __ of [1,2,3,4,5,6,7,8]" class="placeholder-col"></div>
+          </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive" *ngIf="!cargando">
+          <table class="table table-hover bg-white">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Tema</th>
+                <th>Comentarios</th>
+                <th class="text-end">Subtotal</th>
+                <th class="text-end">IVA (%)</th>
+                <th class="text-end">Total</th>
+                <th>Fecha registro</th>
+                <th>Fecha vencimiento</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let c of filtrados">
+                <td>{{ c.id_cotizacion }}</td>
+                <td>{{ c.tema }}</td>
+                <!-- Badge y nombre (cliente / prospecto) -->
+                <td>
+                  <span class="badge me-2" [ngClass]="{
+        'bg-success': c.tabla === 4,
+        'bg-info': c.tabla === 6
+      }">
+                    {{ c.tipo_relacionado }}
+                  </span>
+                  <span>{{ c.nombre_relacionado }}</span>
+                </td>
+                <td class="text-end">{{ c.subtotal | number:'1.2-2' }}</td>
+                <td class="text-end">{{ c.tasa_iva | number:'1.0-2' }}</td>
+                <td class="text-end">{{ c.total | number:'1.2-2' }}</td>
+                <td>{{ c.fecha_registro | date:'dd/MM/yyyy HH:mm' }}</td>
+                <td>
+                  {{ c.fecha_vencimiento ? (c.fecha_vencimiento | date:'dd/MM/yyyy') : '-' }}
+                </td>
+                <td [innerHTML]="c.nombre_estado | estadoBadge"></td>
+                <td class="text-center">
+
+                  <a *ngIf="c.uuid" class="btn btn-link"
+                    [href]="'https://aslsoft.dev/clientes/centro_mando_asl/ver/cotizacion/' + c.uuid" target="_blank"
+                    rel="noopener noreferrer" title="Ver propuesta pública">
+                    <i class="ti ti-eye"></i>
+                  </a>
+
+                  <a class="btn btn-link-primary" [routerLink]="['/cotizaciones/editar', c.id_cotizacion]"
+                    title="Editar">
+                    <i class="ti ti-pencil"></i>
+                  </a>
+
+                  <!-- Botón check SOLO si NO está confirmado -->
+                  <button *ngIf="c.estado_actual !== 4" type="button" class="btn btn-link p-0"
+                    (click)="onConfirmarCotizacion(c)" [disabled]="cambiandoEstado[c.id_cotizacion]"
+                    title="Confirmar cotización (estado 4)">
+                    <i class="ti ti-check text-success"></i>
+                  </button>
+
+
+                  <button class="btn btn-link-danger" (click)="cambiarEstado(c)"
+                    [title]="c.estado_actual === 2 ? 'Archivar' : 'Activar'">
+                    <i [class]="c.estado_actual === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="filtrados.length === 0">
+                <td colspan="10" class="text-center text-muted">
+                  No hay cotizaciones disponibles.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

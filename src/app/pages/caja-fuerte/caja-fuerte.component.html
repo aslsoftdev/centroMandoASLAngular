@@ -1,0 +1,73 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Caja fuerte</h5>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary" (click)="refrescar()">
+            <i class="ti ti-refresh me-1"></i> Refrescar
+          </button>
+          <a routerLink="/caja-fuerte/nueva" class="btn btn-sm btn-primary">
+            <i class="ti ti-plus me-1"></i> Nuevo registro
+          </a>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-2">
+
+        <!-- Shimmer / loader simple -->
+        <div *ngIf="cargando" class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2 text-muted">Cargando caja fuerte...</p>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive" *ngIf="!cargando">
+          <table class="table table-hover bg-white">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 8%;">#</th>
+                <th style="width: 30%;">Título</th>
+                <th>Valor</th>
+                <th style="width: 18%;">Fecha registro</th>
+                <th class="text-center" style="width: 10%;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td>{{ item.id }}</td>
+                <td>{{ item.titulo }}</td>
+                <td>
+                  <div class="valor-multilinea">
+                    {{ item.valor }}
+                  </div>
+                </td>
+                <td>
+                  {{ item.fecha_registro | date:'dd/MM/yyyy HH:mm' }}
+                </td>
+                <td class="text-center">
+                  <button class="btn btn-link" type="button" (click)="copiarValor(item)" title="Copiar valor">
+                    <i class="ti ti-copy"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="items.length === 0">
+                <td colspan="5" class="text-center text-muted">
+                  No hay registros en la caja fuerte o no se ha proporcionado NIP.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,153 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Reuniones</h5>
+        <a routerLink="/reuniones/nueva" class="btn btn-sm btn-primary">
+          <i class="ti ti-plus me-1"></i> Nueva reunión
+        </a>
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-2">
+        <!-- Filtros -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <div class="form-check form-switch ms-1">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="switchSoloActivas"
+                [(ngModel)]="verInactivas"
+                (change)="obtenerReuniones()"
+              />
+              <label class="form-check-label" for="switchSoloActivas">
+                {{ verInactivas ? 'Mostrar activas y archivadas' : 'Mostrar sólo activas' }}
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Buscar por tema, minuta o relacionado..."
+                [(ngModel)]="buscador"
+                (keyup.enter)="filtrar()"
+              />
+              <button class="btn btn-outline-secondary" type="button" (click)="filtrar()">
+                <i class="ti ti-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shimmer -->
+        <div *ngIf="cargando" class="shimmer-container">
+          <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+            <div *ngFor="let __ of [1,2,3,4,5,6,7,8]" class="placeholder-col"></div>
+          </div>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-responsive" *ngIf="!cargando">
+          <table class="table table-hover bg-white">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Tema</th>
+                <th>Relacionado</th>
+                <th>Fecha inicio</th>
+                <th>Fecha fin</th>
+                <th>Llegada cliente</th>
+                <th>Llegada ASL</th>
+                <th>Fecha registro</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of filtrados">
+                <td>{{ r.id_reunion }}</td>
+                <td>{{ r.tema }}</td>
+
+                <!-- Badge y nombre (cliente / prospecto) -->
+                <td>
+                  <span
+                    class="badge me-2"
+                    [ngClass]="{
+                      'bg-success': r.tabla === 4,
+                      'bg-info': r.tabla === 6
+                    }"
+                  >
+                    {{ r.tipo_relacionado }}
+                  </span>
+                  <span>{{ r.nombre_relacionado }}</span>
+                </td>
+
+                <td>
+                  {{ r.fecha_inicio ? (r.fecha_inicio | date:'dd/MM/yyyy HH:mm') : '-' }}
+                </td>
+                <td>
+                  {{ r.fecha_fin ? (r.fecha_fin | date:'dd/MM/yyyy HH:mm') : '-' }}
+                </td>
+                <td>
+                  {{ r.fecha_llegada_cliente ? (r.fecha_llegada_cliente | date:'dd/MM/yyyy HH:mm') : '-' }}
+                </td>
+                <td>
+                  {{ r.fecha_llegada_asl ? (r.fecha_llegada_asl | date:'dd/MM/yyyy HH:mm') : '-' }}
+                </td>
+                <td>
+                  {{ r.fecha_registro ? (r.fecha_registro | date:'dd/MM/yyyy HH:mm') : '-' }}
+                </td>
+
+                <td [innerHTML]="r.nombre_estado | estadoBadge"></td>
+
+                <td class="text-center">
+                  <!-- Ver pública -->
+                  <a
+                    *ngIf="r.uuid"
+                    class="btn btn-link"
+                    [href]="'https://aslsoft.dev/clientes/centro_mando_asl/ver/reunion/' + r.uuid"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Ver minuta pública"
+                  >
+                    <i class="ti ti-eye"></i>
+                  </a>
+
+                  <!-- Editar -->
+                  <a
+                    class="btn btn-link-primary"
+                    [routerLink]="['/reuniones/editar', r.id_reunion]"
+                    title="Editar"
+                  >
+                    <i class="ti ti-pencil"></i>
+                  </a>
+
+                  <!-- Archivar / Activar -->
+                  <button
+                    class="btn btn-link-danger"
+                    (click)="cambiarEstado(r)"
+                    [title]="r.estado_actual === 2 ? 'Archivar' : 'Activar'"
+                  >
+                    <i [class]="r.estado_actual === 2 ? 'ti ti-archive' : 'ti ti-power'"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="filtrados.length === 0">
+                <td colspan="10" class="text-center text-muted">
+                  No hay reuniones registradas.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

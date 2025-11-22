@@ -1,0 +1,54 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+
+      <!-- Header -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Nuevo registro en caja fuerte</h5>
+        <button class="btn btn-secondary" (click)="guardar()">
+          <i class="ti ti-device-floppy me-2"></i> Guardar
+        </button>
+      </div>
+
+      <!-- Loader Overlay -->
+      <div *ngIf="cargando" class="loader-overlay">
+        <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+      </div>
+
+      <!-- Body -->
+      <div class="card-body pt-3">
+        <form [formGroup]="form" novalidate>
+          <div class="row g-3">
+
+            <div class="col-12">
+              <app-form-field [control]="form.get('titulo')" label="Título" errorText="El título es obligatorio.">
+                <input type="text" class="form-control" formControlName="titulo" [ngClass]="{
+                    'is-invalid':
+                      form.get('titulo')?.invalid &&
+                      form.get('titulo')?.touched
+                  }" />
+              </app-form-field>
+            </div>
+
+            <div class="col-12">
+              <app-form-field [control]="form.get('valor')" label="Valor / contraseña / texto"
+                errorText="El valor es obligatorio.">
+                <textarea class="form-control textarea-valor" rows="8" formControlName="valor" [ngClass]="{
+        'is-invalid':
+          form.get('valor')?.invalid &&
+          form.get('valor')?.touched
+      }"></textarea>
+              </app-form-field>
+              <small class="text-muted">
+                El valor se almacenará encriptado en la base de datos.
+              </small>
+            </div>
+
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

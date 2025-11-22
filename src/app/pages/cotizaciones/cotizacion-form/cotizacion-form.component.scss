@@ -1,0 +1,60 @@
+/* Overlay del loader, si lo usas */
+.loader-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.loader-img {
+  width: 80px;
+  height: 80px;
+}
+
+/* Toolbar del editor: gris en lugar de morado */
+.editor-toolbar .btn {
+  border-color: #adb5bd;
+  color: #495057;
+  background-color: #fff;
+}
+
+.editor-toolbar .btn:hover,
+.editor-toolbar .btn:focus {
+  background-color: #495057;
+  color: #fff;
+}
+
+/* Área editable de comentarios */
+.comentarios-editor {
+  min-height: 150px;
+  max-height: 300px;
+  overflow: auto;
+  background: #fff;
+
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+  text-align: left !important;
+}
+
+[contenteditable="true"] {
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+}
+
+.comentarios-editor,
+.comentarios-editor * {
+  direction: ltr !important;
+  unicode-bidi: normal !important;
+  text-align: left !important;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.badge.bg-info {
+  background-color: #0dcaf0 !important;
+}

@@ -1,0 +1,104 @@
+<div class="card shadow-sm border-0">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Versiones de productos</h5>
+    <button class="btn btn-sm btn-outline-secondary" (click)="cargarVersiones()">
+      <i class="ti ti-refresh me-1"></i> Recargar
+    </button>
+  </div>
+
+  <!-- Loader simple -->
+  <div *ngIf="cargando" class="p-3 text-center text-muted">
+    Cargando versiones...
+  </div>
+
+  <div class="card-body p-0" *ngIf="!cargando">
+    <table class="table table-hover mb-0 align-middle">
+      <thead class="table-light">
+        <tr>
+          <th style="width: 6%">ID</th>
+          <th style="width: 25%">Producto</th>
+          <th style="width: 10%">Versión</th>
+          <th style="width: 10%" class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let v of versiones">
+          <td>{{ v.id_version }}</td>
+          <td>{{ v.nombre_producto }}</td>
+          <td>{{ v.version }}</td>
+          <td class="text-end">
+            <!-- Botón subir versión (modal) -->
+            <button
+              type="button"
+              class="btn btn-link-primary"
+              (click)="abrirModalSubir(v)"
+              title="Subir nueva versión"
+            >
+              <i class="ti ti-upload"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="versiones.length === 0">
+          <td colspan="5" class="text-center text-muted py-3">
+            No hay versiones registradas.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Modal subir versión (simple, sin JS de Bootstrap) -->
+<div
+  *ngIf="mostrarModal"
+  class="modal-backdrop-custom"
+>
+  <div class="modal-dialog-custom">
+    <div class="card shadow-lg border-0">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">
+          Subir nueva versión
+          <span *ngIf="selVersion"> - {{ selVersion?.nombre_producto }}</span>
+        </h5>
+        <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+      </div>
+
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">Versión</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="nuevaVersion"
+          />
+          <div class="form-text">
+            Se sugiere versión actual + 1, pero puedes editarla.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Archivo ZIP</label>
+          <input
+            type="file"
+            accept=".zip"
+            class="form-control"
+            (change)="onArchivoChange($event)"
+          />
+          <div class="form-text">
+            Selecciona el Release.zip correspondiente.
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-light" (click)="cerrarModal()">
+          Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="subirVersion()">
+          Subir versión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
