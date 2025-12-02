@@ -1,3 +1,86 @@
 .me-0 {
   margin: 0 0 0 16px !important;
 }
+
+/* Asegura que el avatar “user-avtar” tenga tamaño en tu tema */
+.user-avtar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* menú de usuario compacto */
+.user-menu {
+  min-width: 280px;
+  max-width: 320px;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, .12);
+  max-height: 380px;           /* evita que crezca de más */
+  overflow: auto;              /* scroll solo si lo necesita */
+}
+
+.user-menu__header {
+  padding: 8px 8px 12px 8px;
+  border-bottom: 1px solid #f1f3f5;
+  margin-bottom: 8px;
+
+  h6 { font-weight: 700; }
+  small { font-size: .85rem; }
+}
+
+.user-menu__list {
+  display: grid;
+  gap: 6px;
+
+  .dropdown-item {
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex; align-items: center;
+    &:hover { background: #f8f9fa; }
+    i { font-size: 18px; }
+  }
+}
+
+/* icono/trigger más “pill” */
+.header-user-profile .pc-head-link {
+  border-radius: 12px;
+  padding: 6px 8px;
+}
+
+/* corrige separación del popover respecto al trigger */
+.dropdown-user-profile.pc-h-dropdown.show {
+  margin-top: 8px;
+}
+
+/* Badge con animación de pulso y aro "ping" */
+.notif-badge{
+  animation: notif-pulse 1.2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(220, 53, 69, .6); // color del bg-danger
+  position: absolute; /* ya viene del utility, lo repetimos por seguridad */
+}
+
+/* Aro externo que crece y se desvanece */
+.notif-badge::after{
+  content: '';
+  position: absolute;
+  inset: -4px;            /* controla el tamaño del aro inicial */
+  border-radius: 999px;
+  border: 2px solid rgba(220, 53, 69, .6);
+  animation: notif-ping 1.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes notif-pulse{
+  0%   { transform: translate(-50%, -50%) scale(1);   box-shadow: 0 0 0 0 rgba(220,53,69,.6); }
+  70%  { transform: translate(-50%, -50%) scale(1.08); box-shadow: 0 0 0 8px rgba(220,53,69,0); }
+  100% { transform: translate(-50%, -50%) scale(1);   box-shadow: 0 0 0 0 rgba(220,53,69,0); }
+}
+
+@keyframes notif-ping{
+  0%   { transform: scale(1);   opacity: .7; }
+  80%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
