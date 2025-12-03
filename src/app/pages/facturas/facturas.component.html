@@ -32,6 +32,7 @@
                 <th>Fecha Factura</th>
                 <th>Fecha Registro</th>
                 <th>Estado</th>
+                <th>SAT</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -46,14 +47,13 @@
                 <td>{{ f.iva      | currency:'MXN' }}</td>
                 <td>{{ f.total    | currency:'MXN' }}</td>
 
-                <!-- NUEVAS columnas -->
                 <td>{{ f.total_pagado | currency:'MXN' }}</td>
                 <td>
                   <span class="badge" [ngClass]="{
-                'bg-success': f.estado_pagos === 'Pagada',
-                'bg-warning text-dark': f.estado_pagos === 'Pagada Parcialmente',
-                'bg-secondary': f.estado_pagos === 'Sin pagos'
-              }">
+          'bg-success': f.estado_pagos === 'Pagada',
+          'bg-warning text-dark': f.estado_pagos === 'Pagada Parcialmente',
+          'bg-secondary': f.estado_pagos === 'Sin pagos'
+        }">
                     {{ f.estado_pagos }}
                   </span>
                 </td>
@@ -62,14 +62,33 @@
                   {{ f.fecha_factura ? (f.fecha_factura | date:'dd/MM/yyyy HH:mm') : '—' }}
                 </td>
 
-                 <td>
+                <td>
                   {{ f.fecha_registro ? (f.fecha_registro | date:'dd/MM/yyyy HH:mm') : '—' }}
                 </td>
 
                 <td [innerHTML]="f.nombre_estado | estadoBadge"></td>
 
+                <!-- Columna SAT -->
                 <td class="text-nowrap">
-                  <!-- Ver PDF -->
+                  <!-- Si está facturada (tiene sat_xml) mostramos los botones -->
+                  <ng-container *ngIf="f.facturada === 1">
+                    <!-- PDF SAT -->
+                    <a [href]="getSatPdfUrl(f)" class="btn btn-sm btn-danger me-1" target="_blank" rel="noopener"
+                      title="PDF SAT">
+                      <i class="ti ti-file-type-pdf"></i>
+                    </a>
+
+                    <!-- XML SAT -->
+                    <a [href]="getSatXmlUrl(f)" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener"
+                      title="XML SAT">
+                      <i class="ti ti-file-type-xml"></i>
+                    </a>
+                  </ng-container>
+                </td>
+
+
+                <td class="text-nowrap">
+                  <!-- Ver PDF interno -->
                   <a class="btn btn-link-secondary" [routerLink]="['/facturas/pdf', f.id_factura]" title="Ver PDF">
                     <i class="ti ti-file-invoice"></i>
                   </a>
@@ -85,16 +104,16 @@
                     <i [class]="f.estado_actual === 3 ? 'ti ti-power' : 'ti ti-archive'"></i>
                   </button>
                 </td>
-
               </tr>
 
               <tr *ngIf="facturas.length === 0">
-                <td colspan="11" class="text-center text-muted">
+                <td colspan="13" class="text-center text-muted">
                   No hay facturas disponibles.
                 </td>
               </tr>
             </tbody>
           </table>
+
 
         </div> <!-- table-responsive -->
       </div>

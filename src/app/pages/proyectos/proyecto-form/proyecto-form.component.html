@@ -52,21 +52,25 @@
 
             <div class="col-md-4">
               <app-form-field [control]="form.get('subtotal')" label="Subtotal">
-                <input type="number" class="form-control text-end" formControlName="subtotal" />
+                <app-input-money formControlName="subtotal" placeholder="0.00">
+                </app-input-money>
               </app-form-field>
             </div>
 
             <div class="col-md-4">
               <app-form-field [control]="form.get('iva')" label="IVA">
-                <input type="number" class="form-control text-end" formControlName="iva" />
+                <app-input-money formControlName="iva" placeholder="0.00">
+                </app-input-money>
               </app-form-field>
             </div>
 
             <div class="col-md-4">
               <app-form-field [control]="form.get('total')" label="Total">
-                <input type="number" class="form-control text-end" formControlName="total" />
+                <app-input-money formControlName="total" placeholder="0.00">
+                </app-input-money>
               </app-form-field>
             </div>
+
 
             <div class="col-md-6">
               <app-form-field [control]="form.get('fecha_inicio')" label="Fecha Inicio">

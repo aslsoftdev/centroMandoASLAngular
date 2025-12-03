@@ -21,6 +21,7 @@ type Pago = {
   nombre_metodo: string;
   importe: number;
   fecha_registro: string | null;
+  fecha_pago: string | null;
   estado_actual: number;
 };
 
@@ -203,6 +204,7 @@ export class FacturaPdfPageComponent implements OnInit {
           id_pago: +p.id_pago,
           nombre_metodo: p.nombre_metodo,
           importe: +p.importe,
+          fecha_pago: (p.fecha_pago && p.fecha_pago !== '0000-00-00 00:00:00') ? p.fecha_pago : null,
           fecha_registro: (p.fecha_registro && p.fecha_registro !== '0000-00-00 00:00:00') ? p.fecha_registro : null,
           estado_actual: +p.estado_actual || 2
         }));

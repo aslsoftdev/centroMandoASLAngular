@@ -6,11 +6,18 @@ import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { API_ENDPOINTS } from 'src/app/core/config/constants';
 import { FormFieldComponent } from 'src/app/shared/components/form-field/form-field.component';
+import { InputMoneyComponent } from 'src/app/shared/components/input-money/input-money.component';
 
 @Component({
   selector: 'app-proyecto-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FormFieldComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    FormFieldComponent,
+    InputMoneyComponent
+  ],
   templateUrl: './proyecto-form.component.html',
   styleUrls: ['./proyecto-form.component.scss']
 })
@@ -45,6 +52,7 @@ export class ProyectoFormComponent implements OnInit {
     });
 
     this.cargarCatalogos();
+    this.configurarCalculoTotal();   // <<< aquí
 
     const idParam = this.route.snapshot.paramMap.get('id');
     if (idParam) {
@@ -52,6 +60,27 @@ export class ProyectoFormComponent implements OnInit {
       this.esEdicion = true;
       this.loadProyecto(this.idProyecto);
     }
+  }
+
+  // recalcula total cuando cambian subtotal o iva
+  private configurarCalculoTotal(): void {
+    const subtotalCtrl = this.form.get('subtotal');
+    const ivaCtrl = this.form.get('iva');
+    const totalCtrl = this.form.get('total');
+
+    if (!subtotalCtrl || !ivaCtrl || !totalCtrl) { return; }
+
+    const calcular = () => {
+      const subtotal = Number(subtotalCtrl.value) || 0;
+      const iva = Number(ivaCtrl.value) || 0;
+      totalCtrl.setValue(subtotal + iva, { emitEvent: false });
+    };
+
+    subtotalCtrl.valueChanges.subscribe(calcular);
+    ivaCtrl.valueChanges.subscribe(calcular);
+
+    // valor inicial
+    calcular();
   }
 
   private cargarCatalogos(): void {
@@ -81,6 +110,7 @@ export class ProyectoFormComponent implements OnInit {
         this.cargando = false;
         if (resp.status && resp.proyecto) {
           this.form.patchValue(resp.proyecto);
+          this.recalcularTotal();    // sincronizar después del patch
         } else {
           Swal.fire('Error', 'Proyecto no encontrado', 'error')
             .then(() => this.router.navigate(['/proyectos']));
@@ -94,11 +124,19 @@ export class ProyectoFormComponent implements OnInit {
     });
   }
 
+  private recalcularTotal(): void {
+    const subtotal = Number(this.form.get('subtotal')?.value) || 0;
+    const iva = Number(this.form.get('iva')?.value) || 0;
+    this.form.get('total')?.setValue(subtotal + iva, { emitEvent: false });
+  }
+
   guardar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+
+    this.recalcularTotal(); // asegurar que vaya actualizado
 
     this.cargando = true;
     const fv = this.form.value;

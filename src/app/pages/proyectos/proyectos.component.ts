@@ -13,6 +13,7 @@ import { EstadoBadgePipe } from 'src/app/shared/pipes/estadoClase.pipe';
   templateUrl: './proyectos.component.html',
   styleUrls: ['./proyectos.component.scss']
 })
+
 export class ProyectosComponent implements OnInit {
   proyectos: any[] = [];
   cargando = false;
@@ -34,12 +35,23 @@ export class ProyectosComponent implements OnInit {
       next: resp => {
         this.cargando = false;
 
-        const limpiar = (d: any) => (!d || d === '0000-00-00 00:00:00') ? null : d;
+        const limpiarFecha = (d: any) =>
+          (!d || d === '0000-00-00 00:00:00') ? null : d;
+
+        const toNumber = (v: any) => v == null ? 0 : +v;
 
         this.proyectos = (resp.status ? resp.proyectos : []).map((p: any) => ({
           ...p,
-          fecha_inicio: limpiar(p.fecha_inicio),
-          fecha_fin: limpiar(p.fecha_fin),
+          fecha_inicio: limpiarFecha(p.fecha_inicio),
+          fecha_fin: limpiarFecha(p.fecha_fin),
+
+          // asegurar numéricos
+          subtotal:        toNumber(p.subtotal),
+          iva:             toNumber(p.iva),
+          total:           toNumber(p.total),
+          total_facturado: toNumber(p.total_facturado),
+          total_pagado:    toNumber(p.total_pagado),
+          saldo_proyecto:  toNumber(p.saldo_proyecto),
         }));
       },
       error: () => {
