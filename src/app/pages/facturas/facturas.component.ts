@@ -18,6 +18,8 @@ interface Factura {
   total_pagado: number;        // viene del backend
   estado_pagos: 'Pagada' | 'Pagada Parcialmente' | 'Sin pagos';
 
+  facturada: number; // 0 o 1, viene del backend
+
   fecha_factura: string | null;
   fecha_registro: string | null;
   estado_actual: number;
@@ -38,6 +40,9 @@ export class FacturasComponent implements OnInit {
   cargando = false;
   usuarioId = +(localStorage.getItem('id_usuario') || 0);
 
+  // base para los reportes SAT
+  private readonly SAT_BASE_URL = 'https://aslsoft.dev/clientes/centro_mando_asl';
+
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -57,10 +62,10 @@ export class FacturasComponent implements OnInit {
       next: resp => {
         this.cargando = false;
         const lista: Factura[] = resp.status ? resp.facturas : [];
-        this.facturas = (lista || []).map((f: Factura) => ({
+        this.facturas = (lista || []).map((f: any) => ({
           ...f,
-          fecha_registro: this.limpiarFecha((f as any).fecha_registro),
-          // total_pagado y estado_pagos vienen ya del backend según lo que agregamos al SQL
+          fecha_registro: this.limpiarFecha(f.fecha_registro),
+          fecha_factura: this.limpiarFecha(f.fecha_factura),
         }));
       },
       error: () => {
@@ -68,6 +73,14 @@ export class FacturasComponent implements OnInit {
         Swal.fire('Error', 'No se pudieron cargar las facturas', 'error');
       }
     });
+  }
+
+  getSatPdfUrl(f: Factura): string {
+    return `${this.SAT_BASE_URL}/pdfs/rep_factura_venta.php?factura=${f.id_factura}`;
+  }
+
+  getSatXmlUrl(f: Factura): string {
+    return `${this.SAT_BASE_URL}/xml.php?factura=${f.id_factura}`;
   }
 
   cambiarEstado(f: Factura): void {

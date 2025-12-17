@@ -17,6 +17,11 @@
         </div>
 
         <div class="col-md-3">
+          <label class="form-label mb-1">Razón Social *</label>
+          <input [(ngModel)]="nuevo.razon_social" class="form-control" placeholder="Razón Social" />
+        </div>
+
+        <div class="col-md-3">
           <label class="form-label mb-1">Tipo contribuyente *</label>
           <select [(ngModel)]="nuevo.sat_tipo_contribuyente" class="form-select">
             <option [ngValue]="null">Seleccione…</option>
@@ -114,8 +119,14 @@
         </div>
 
         <div class="col-md-3">
+          <label class="form-label mb-1">Razón Social *</label>
+          <input [(ngModel)]="r.razon_social" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+        </div>
+
+        <div class="col-md-3">
           <label class="form-label mb-1">Tipo contribuyente *</label>
-          <select [(ngModel)]="r.sat_tipo_contribuyente" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+          <select [(ngModel)]="r.sat_tipo_contribuyente" class="form-select form-select-sm"
+            (ngModelChange)="marcarEditado(r)">
             <option *ngFor="let o of tiposContribuyente" [ngValue]="o.id">{{ o.nombre }}</option>
           </select>
         </div>
@@ -136,7 +147,8 @@
 
         <div class="col-md-4">
           <label class="form-label mb-1">Régimen fiscal *</label>
-          <select [(ngModel)]="r.sat_regimen_fiscal" class="form-select form-select-sm" (ngModelChange)="marcarEditado(r)">
+          <select [(ngModel)]="r.sat_regimen_fiscal" class="form-select form-select-sm"
+            (ngModelChange)="marcarEditado(r)">
             <option *ngFor="let o of regimenesFiscales" [ngValue]="o.id">{{ o.nombre }}</option>
           </select>
         </div>
@@ -151,7 +163,8 @@
 
         <div class="col-md-2">
           <label class="form-label mb-1">CP *</label>
-          <input [(ngModel)]="r.codigo_postal" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+          <input [(ngModel)]="r.codigo_postal" class="form-control form-control-sm"
+            (ngModelChange)="marcarEditado(r)" />
         </div>
 
         <div class="col-md-6">
@@ -161,12 +174,14 @@
 
         <div class="col-md-3">
           <label class="form-label mb-1">No. exterior *</label>
-          <input [(ngModel)]="r.numero_exterior" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+          <input [(ngModel)]="r.numero_exterior" class="form-control form-control-sm"
+            (ngModelChange)="marcarEditado(r)" />
         </div>
 
         <div class="col-md-3">
           <label class="form-label mb-1">No. interior</label>
-          <input [(ngModel)]="r.numero_interior" class="form-control form-control-sm" (ngModelChange)="marcarEditado(r)" />
+          <input [(ngModel)]="r.numero_interior" class="form-control form-control-sm"
+            (ngModelChange)="marcarEditado(r)" />
         </div>
 
         <div class="col-md-3">

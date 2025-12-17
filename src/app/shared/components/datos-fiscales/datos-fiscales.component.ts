@@ -31,6 +31,7 @@ export class DatosFiscalesComponent implements OnInit {
   // form nuevo
   nuevo: any = {
     rfc: '',
+    razon_social: '',
     sat_tipo_contribuyente: null,
     sat_metodo_pago: null,
     sat_forma_pago: null,
@@ -118,6 +119,7 @@ export class DatosFiscalesComponent implements OnInit {
 
   private normalizaNuevo() {
     this.nuevo.rfc = String(this.nuevo.rfc ?? '').toUpperCase().trim();
+    this.nuevo.razon_social = String(this.nuevo.razon_social ?? '').trim();
     this.nuevo.codigo_postal = String(this.nuevo.codigo_postal ?? '').replace(/\D/g,'');
     this.nuevo.calle = String(this.nuevo.calle ?? '').trim();
     this.nuevo.numero_exterior = String(this.nuevo.numero_exterior ?? '').trim();
@@ -128,6 +130,7 @@ export class DatosFiscalesComponent implements OnInit {
 
   private normalizaRegistro(r: any) {
     r.rfc = String(r.rfc ?? '').toUpperCase().trim();
+    r.razon_social = String(r.razon_social ?? '').trim();
     r.codigo_postal = String(r.codigo_postal ?? '').replace(/\D/g,'');
     r.calle = String(r.calle ?? '').trim();
     r.numero_exterior = String(r.numero_exterior ?? '').trim();
@@ -165,6 +168,7 @@ export class DatosFiscalesComponent implements OnInit {
       if (resp.status) {
         this.nuevo = {
           rfc: '',
+          razon_social: '',
           sat_tipo_contribuyente: null,
           sat_metodo_pago: null,
           sat_forma_pago: null,
@@ -207,6 +211,7 @@ export class DatosFiscalesComponent implements OnInit {
       tabla: this.tabla,
       clave_tabla: this.claveTabla,
       rfc: r.rfc,
+      razon_social: r.razon_social,
       sat_tipo_contribuyente: r.sat_tipo_contribuyente,
       sat_metodo_pago: r.sat_metodo_pago,
       sat_forma_pago: r.sat_forma_pago,
