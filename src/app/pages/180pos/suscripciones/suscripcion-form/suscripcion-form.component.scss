@@ -1,0 +1,86 @@
+.car-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.car-row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+}
+
+.car-left{
+  flex: 1;
+  min-width: 0;
+}
+
+.car-left .form-check-label{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.car-right{
+  flex: 0 0 auto;
+}
+
+.tree-parent td { background: #fbfbfd; }
+.tree-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.tree-toggle {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  background: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.tree-toggle i { font-size: 12px; opacity: .8; }
+.tree-toggle-spacer { width: 26px; height: 26px; display: inline-block; }
+
+.tree-title { font-weight: 700; }
+
+.level-1 { padding-left: 34px; }
+
+.tree-lines {
+  position: absolute;
+  left: 34px;
+  transform: translateX(-16px);
+  width: 18px;
+  height: 100%;
+  pointer-events: none;
+}
+.tree-lines .v {
+  position: absolute;
+  left: 8px;
+  top: -14px;
+  bottom: -14px;
+  width: 1px;
+  background: rgba(15, 23, 42, 0.12);
+}
+.tree-lines .h {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  width: 14px;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.12);
+}

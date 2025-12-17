@@ -35,7 +35,7 @@ export class CaracteristicaFormComponent implements OnInit {
   cargando = false;
   esEdicion = false;
   idCaracteristica = 0;
-  usuarioId = +(localStorage.getItem('id_usuario') || 0);
+  usuarioId = 1; //+(localStorage.getItem('id_usuario') || 0);
 
   tiposCaracteristica: TipoCaracteristica[] = [];
   cargandoTipos = false;
@@ -82,7 +82,7 @@ export class CaracteristicaFormComponent implements OnInit {
       usuario: this.usuarioId
     };
 
-    this.http.post<any>(API_ENDPOINTS.combos, body).subscribe({
+    this.http.post<any>(API_ENDPOINTS.combos180POS, body).subscribe({
       next: (resp) => {
         this.cargandoTipos = false;
         if (resp.status && Array.isArray(resp.tipos_caracteristicas)) {

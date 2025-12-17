@@ -71,43 +71,64 @@
               </div>
             </div>
 
-            <!-- Características -->
+            <!-- Características en árbol -->
             <div class="col-12">
               <label class="form-label">Características incluidas</label>
-              <div class="bg-light border rounded p-3">
-                <div *ngIf="cargandoCaracteristicas" class="text-muted">Cargando características…</div>
-                <div *ngIf="!cargandoCaracteristicas && caracteristicasVM.length === 0" class="text-muted">
+
+              <div class="border rounded bg-light p-2">
+
+                <div *ngIf="cargandoCaracteristicas" class="text-muted p-2">
+                  Cargando características…
+                </div>
+
+                <div *ngIf="!cargandoCaracteristicas && caracteristicasTree.length === 0" class="text-muted p-2">
                   No hay características disponibles.
                 </div>
 
-                <div class="row g-2" *ngIf="!cargandoCaracteristicas && caracteristicasVM.length">
-                  <div class="col-md-6" *ngFor="let c of caracteristicasVM">
-                    <div class="d-flex align-items-start gap-2 p-2 bg-white border rounded">
-                      <div class="form-check mt-1">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               [checked]="c.seleccionado"
-                               (change)="toggleCaracteristica(c, $any($event.target).checked)"
-                               [id]="'car_'+c.id_caracteristica" />
-                      </div>
-                      <div class="flex-grow-1">
-                        <label class="form-check-label fw-semibold" [for]="'car_'+c.id_caracteristica">
-                          {{ c.nombre_caracteristica }}
-                        </label>
+                <div *ngIf="!cargandoCaracteristicas && caracteristicasTree.length > 0"
+                     class="list-group list-group-flush">
 
-                        <!-- Valor límite si aplica -->
-                        <div *ngIf="c.maneja_limites && c.seleccionado" class="mt-2">
-                          <div class="input-group input-group-sm" style="max-width: 220px;">
-                            <span class="input-group-text">Límite</span>
-                            <input type="number" class="form-control" [(ngModel)]="c.valor_limite" [ngModelOptions]="{standalone:true}">
-                          </div>
-                          <small class="text-muted">Solo si maneja límites.</small>
-                        </div>
+                  <div
+                    class="list-group-item bg-white d-flex align-items-center gap-2"
+                    *ngFor="let c of caracteristicasTree; trackBy: trackByCar"
+                  >
+                    <!-- indent -->
+                    <div [style.width.px]="c.level * 22"></div>
+                    <div *ngIf="c.level > 0" class="text-muted" style="min-width: 18px;">└─</div>
+
+                    <!-- checkbox -->
+                    <div class="form-check m-0">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        [id]="'car_'+c.id_caracteristica"
+                        [checked]="c.seleccionado"
+                        (change)="toggleCaracteristica(c, $any($event.target).checked)"
+                      />
+                    </div>
+
+                    <!-- label -->
+                    <label class="m-0 flex-grow-1" [for]="'car_'+c.id_caracteristica">
+                      <div class="fw-semibold">{{ c.nombre_caracteristica }}</div>
+                      <small class="text-muted" *ngIf="c.nombre_tecnico">{{ c.nombre_tecnico }}</small>
+                    </label>
+
+                    <!-- límite a la derecha -->
+                    <div *ngIf="c.maneja_limites && c.seleccionado" class="ms-auto" style="width: 220px;">
+                      <div class="input-group input-group-sm">
+                        <span class="input-group-text">Límite</span>
+                        <input
+                          type="number"
+                          class="form-control"
+                          [(ngModel)]="c.valor_limite"
+                          [ngModelOptions]="{standalone:true}"
+                        />
                       </div>
                     </div>
-                  </div>
-                </div>
 
+                  </div>
+
+                </div>
               </div>
             </div>
 
