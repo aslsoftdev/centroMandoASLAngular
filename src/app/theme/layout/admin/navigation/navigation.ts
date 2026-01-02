@@ -128,6 +128,16 @@ export const NavigationItems: NavigationItem[] = [
         breadcrumbs: false
       },
 
+      {
+        id: 'transferencias-cuentas',
+        title: 'Transferencias',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/transferencias-cuentas',
+        icon: 'ti ti-arrows-exchange',
+        breadcrumbs: false
+      },
+
       
       {
         id: 'versiones',

@@ -21,6 +21,8 @@ export const API_ENDPOINTS = {
   reuniones: `${API_BASE_URL}/api.reuniones.php`,
   cajaFuerte: `${API_BASE_URL}/api.caja_fuerte.php`,
   versiones: `${API_BASE_URL}/api.versiones.php`,
+  cuentas: `${API_BASE_URL}/api.cuentas.php`,
+  transferencias_cuentas: `${API_BASE_URL}/api.transferencias_cuentas.php`,
   
   tiposClientes: `${API_BASE_URL}/api.tipos_clientes.php`,
   tiposProveedores: `${API_BASE_URL}/api.tipos_proveedores.php`,

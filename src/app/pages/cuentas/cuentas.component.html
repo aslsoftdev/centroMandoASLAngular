@@ -1,0 +1,95 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Cuentas</h5>
+        <!-- Sin botón de agregar -->
+      </div>
+
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+
+          <!-- Shimmer mientras carga -->
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div *ngFor="let __ of [1,2,3,4,5,6,7]" class="placeholder-col"></div>
+            </div>
+          </div>
+
+          <!-- Tabla de cuentas -->
+          <table class="table table-hover bg-white align-middle" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Tipo</th>
+                <th>Cuenta</th>
+                <th class="text-end">Saldo</th>
+                <th>Registro</th>
+                <th>Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let c of cuentas">
+                <td>{{ c.id_cuenta }}</td>
+
+                <td>
+                  <span class="pill pill-neutral">
+                    <i class="ti ti-wallet me-1"></i>
+                    {{ c.tipo_cuenta || '—' }}
+                  </span>
+                </td>
+
+                <td>
+                  {{ c.nombre_cuenta }}
+                </td>
+
+                <td class="text-end">
+                  <span [ngClass]="{'text-danger': (c.saldo || 0) < 0}">
+                    {{ (c.saldo || 0) | currency }}
+                  </span>
+                </td>
+
+                <td>
+                  <ng-container *ngIf="c.fecha_registro; else sinFecha">
+                    {{ c.fecha_registro | date:"dd 'de' MMMM 'de' yyyy, h:mm a" }}
+                  </ng-container>
+                  <ng-template #sinFecha><span class="text-muted">—</span></ng-template>
+                </td>
+
+                <td [innerHTML]="c.nombre_estado | estadoBadge"></td>
+
+                <td class="text-center acciones">
+                  <a
+                    class="btn btn-link-primary"
+                    [routerLink]="['/cuentas/ver', c.id_cuenta]"
+                    title="Ver"
+                  >
+                    <i class="ti ti-eye"></i>
+                  </a>
+
+                  <!-- Opcional: Archivar/Activar (si lo habilitas en backend)
+                  <button
+                    type="button"
+                    class="btn btn-link-secondary"
+                    (click)="cambiarEstado(c)"
+                    [title]="c.estado_actual === 3 ? 'Activar' : 'Archivar'"
+                  >
+                    <i class="ti" [ngClass]="c.estado_actual === 3 ? 'ti-player-play' : 'ti-archive'"></i>
+                  </button>
+                  -->
+                </td>
+              </tr>
+
+              <tr *ngIf="cuentas.length === 0">
+                <td colspan="7" class="text-center text-muted">No hay cuentas disponibles.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

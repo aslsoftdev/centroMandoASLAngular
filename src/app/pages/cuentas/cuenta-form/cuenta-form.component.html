@@ -1,0 +1,240 @@
+<!-- cuenta-form.component.html -->
+<div class="row mt-2" *ngIf="cuenta">
+  <div class="col-sm-12">
+
+    <div class="card shadow-sm border-0 cuenta-card">
+      <!-- Header -->
+      <div class="card-header cuenta-header" [style.background]="headerColor">
+        <div class="d-flex align-items-center justify-content-between">
+          <h4 class="mb-0 text-white">
+            <i class="ti ti-wallet me-2"></i>{{ cuenta.nombre_cuenta }}
+          </h4>
+          <span class="estado-pill text-white">{{ cuenta.nombre_estado }}</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+
+        <!-- Línea de datos -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="mini-card">
+              <div class="mini-title">Saldo</div>
+              <div class="mini-value" [class.text-danger]="(cuenta.saldo || 0) < 0">
+                {{ (cuenta.saldo || 0) | currency }}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="mini-card soft">
+              <div class="mini-title">Tipo de cuenta</div>
+              <div class="mini-value">{{ cuenta.tipo_cuenta || '—' }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="mini-card soft text-center">
+              <div class="mini-title">Fecha de registro</div>
+              <div class="mini-value">
+                <ng-container *ngIf="cuenta.fecha_registro; else sinFecha">
+                  {{ cuenta.fecha_registro | date:"dd 'de' MMMM 'de' yyyy, h:mm a" }}
+                </ng-container>
+                <ng-template #sinFecha><span class="text-muted">—</span></ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla de movimientos -->
+        <div class="table-responsive">
+          <table class="table table-hover bg-white align-middle">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th style="width: 12%">Tabla</th>
+                <th style="width: 10%">Clave</th>
+                <th style="width: 12%">Anterior</th>
+                <th style="width: 12%">Movimiento</th>
+                <th style="width: 12%">Final</th>
+                <th style="width: 14%">Registro</th>
+                <th style="width: 26%">Comentarios</th>
+                <th style="width: 10%" class="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Fila NUEVO movimiento ARRIBA (manual) -->
+              <tr [formGroup]="formNuevo" class="table-light">
+                <td>—</td>
+
+                <!-- Tabla / Clave: visualmente "-" para ahorrar espacio -->
+                <td class="text-center text-muted fw-semibold">-</td>
+                <td class="text-center text-muted fw-semibold">-</td>
+
+                <td class="text-muted small align-middle">
+                  {{ (cuenta?.saldo ?? 0) | currency }}
+                </td>
+
+                <td>
+                  <input
+                    #cantidadInput
+                    type="number"
+                    class="form-control"
+                    formControlName="cantidad_movimiento"
+                    step="0.01"
+                  />
+                  <div class="form-text text-muted">
+                    Positivo = abono / Negativo = cargo
+                  </div>
+                </td>
+
+                <td class="text-muted small align-middle">—</td>
+
+                <td>
+                  <input type="date" class="form-control" formControlName="fecha_registro" />
+                </td>
+
+                <td>
+                  <input
+                    type="text"
+                    class="form-control"
+                    formControlName="comentarios"
+                    placeholder="Comentarios (opcional)"
+                    (keydown.enter)="guardarNuevoFromKey($event)"
+                    maxlength="150"
+                  />
+                </td>
+
+                <td class="text-center text-nowrap">
+                  <button class="btn btn-sm btn-primary" (click)="guardarNuevo()" [disabled]="guardandoNuevo">
+                    <i class="ti ti-plus me-1"></i> Agregar
+                  </button>
+                </td>
+              </tr>
+
+              <!-- Movimientos existentes -->
+              <tr *ngFor="let m of movimientos">
+                <td>{{ m.id_movimiento }}</td>
+
+                <td>
+                  <span class="pill pill-neutral">
+                    <i class="ti ti-database me-1"></i>{{ (m.tabla ?? '-') }}
+                  </span>
+                </td>
+
+                <td>
+                  <span class="badge bg-light text-dark border">
+                    {{ (m.clave_tabla ?? '-') }}
+                  </span>
+                </td>
+
+                <td>
+                  <span [class.text-danger]="(m.cantidad_anterior || 0) < 0">
+                    {{ (m.cantidad_anterior || 0) | currency }}
+                  </span>
+                </td>
+
+                <!-- Movimiento -->
+                <td>
+                  <ng-container *ngIf="!m._edit; else editMov">
+                    <span
+                      class="fw-semibold"
+                      [ngClass]="{
+                        'text-success': (m.cantidad_movimiento || 0) > 0,
+                        'text-danger': (m.cantidad_movimiento || 0) < 0
+                      }"
+                    >
+                      {{ (m.cantidad_movimiento || 0) | currency }}
+                    </span>
+                  </ng-container>
+                  <ng-template #editMov>
+                    <input
+                      type="number"
+                      class="form-control"
+                      [(ngModel)]="m.cantidad_movimiento"
+                      [ngModelOptions]="{standalone:true}"
+                      step="0.01"
+                    />
+                  </ng-template>
+                </td>
+
+                <td>
+                  <strong [class.text-danger]="(m.cantidad_final || 0) < 0">
+                    {{ (m.cantidad_final || 0) | currency }}
+                  </strong>
+                </td>
+
+                <!-- Fecha -->
+                <td>
+                  <ng-container *ngIf="!m._edit; else editFecha">
+                    <ng-container *ngIf="m.fecha_registro; else sinFechaMov">
+                      {{ m.fecha_registro | date:"dd/MM/yyyy, h:mm a" }}
+                    </ng-container>
+                    <ng-template #sinFechaMov><span class="text-muted">—</span></ng-template>
+                  </ng-container>
+                  <ng-template #editFecha>
+                    <input
+                      type="date"
+                      class="form-control"
+                      [(ngModel)]="m.fecha_registro"
+                      [ngModelOptions]="{standalone:true}"
+                    />
+                  </ng-template>
+                </td>
+
+                <!-- Comentarios -->
+                <td>
+                  <ng-container *ngIf="!m._edit; else editCom">
+                    <span class="text-muted" *ngIf="!m.comentarios">—</span>
+                    <span *ngIf="m.comentarios">{{ m.comentarios }}</span>
+                  </ng-container>
+                  <ng-template #editCom>
+                    <input
+                      type="text"
+                      class="form-control"
+                      [(ngModel)]="m.comentarios"
+                      [ngModelOptions]="{standalone:true}"
+                      placeholder="Comentarios"
+                      maxlength="150"
+                    />
+                  </ng-template>
+                </td>
+
+                <!-- Acciones -->
+                <td class="text-center text-nowrap">
+                  <button *ngIf="!m._edit" class="btn btn-link-primary" (click)="activarEdicion(m)" title="Editar">
+                    <i class="ti ti-pencil"></i>
+                  </button>
+
+                  <button *ngIf="m._edit" class="btn btn-link-success" (click)="guardarEdicion(m)" title="Guardar">
+                    <i class="ti ti-check"></i>
+                  </button>
+
+                  <button *ngIf="m._edit" class="btn btn-link-secondary" (click)="cancelarEdicion(m)" title="Cancelar">
+                    <i class="ti ti-x"></i>
+                  </button>
+
+                  <button class="btn btn-link-danger" (click)="archivarMovimiento(m)" title="Archivar">
+                    <i class="ti ti-archive"></i>
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="movimientos.length === 0">
+                <td colspan="9" class="text-center text-muted">Sin movimientos.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Loader overlay -->
+    <div *ngIf="cargando" class="loader-overlay">
+      <img src="assets/images/loading.gif" alt="Cargando..." class="loader-img" />
+    </div>
+
+  </div>
+</div>

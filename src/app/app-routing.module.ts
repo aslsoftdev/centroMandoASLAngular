@@ -317,6 +317,27 @@ const routes: Routes = [
             m => m.CajaFuerteFormComponent
           )
       },
+
+      {
+        path: 'cuentas',
+        loadComponent: () =>
+          import('./pages/cuentas/cuentas.component')
+            .then(m => m.CuentasComponent)
+      },
+  
+      {
+        path: 'cuentas/ver/:id',
+        loadComponent: () =>
+          import('./pages/cuentas/cuenta-form/cuenta-form.component')
+            .then(m => m.CuentaFormComponent)
+      },
+
+       {
+        path: 'transferencias-cuentas',
+        loadComponent: () =>
+          import('./pages/transferencias-cuentas/transferencias-cuentas.component')
+            .then(m => m.TransferenciasCuentasComponent)
+      },
     ]
   },
 

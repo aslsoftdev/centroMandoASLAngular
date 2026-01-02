@@ -1,0 +1,229 @@
+<div class="row mt-2">
+  <div class="col-sm-12">
+    <div class="card shadow-sm border-0">
+      <!-- HEADER -->
+      <div class="card-header pb-2 d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="mb-0">Transferencias</h5>
+
+          <div class="form-check form-switch mt-1">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="mostrarInactivos"
+              [(ngModel)]="mostrarInactivos"
+              (change)="cargarTransferencias()"
+            />
+            <label class="form-check-label" for="mostrarInactivos">Mostrar inactivos</label>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" type="button" (click)="abrirModal()">
+            <i class="ti ti-arrows-exchange me-1"></i>
+            Nueva transferencia
+          </button>
+        </div>
+      </div>
+
+      <div class="card-body pt-2">
+        <div class="table-responsive">
+
+          <!-- Shimmer mientras carga -->
+          <div *ngIf="cargando" class="shimmer-container">
+            <div *ngFor="let _ of [1,2,3,4]" class="placeholder-row shimmer">
+              <div *ngFor="let __ of [1,2,3,4,5,6,7,8]" class="placeholder-col"></div>
+            </div>
+          </div>
+
+          <!-- Tabla -->
+          <table class="table table-hover bg-white align-middle" *ngIf="!cargando">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Descripción</th>
+                <th>Importe</th>
+                <th>Comentarios</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <!--<th class="text-nowrap">Acciones</th>-->
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let t of transferencias">
+                <td>{{ t.id_transferencia }}</td>
+
+                <td>
+                  <div class="fw-semibold">{{ t.nombre_origen || '—' }}</div>
+                  <div class="text-muted small">#{{ t.cuenta_origen }}</div>
+                </td>
+
+                <td>
+                  <div class="fw-semibold">{{ t.nombre_destino || '—' }}</div>
+                  <div class="text-muted small">#{{ t.cuenta_destino }}</div>
+                </td>
+
+                <td>
+                  <span class="text-muted" *ngIf="!t.descripcion">—</span>
+                  <span *ngIf="t.descripcion">{{ t.descripcion }}</span>
+                </td>
+
+                <td class="text-nowrap fw-semibold">
+                  {{ t.importe | currency }}
+                </td>
+
+                <td>
+                  <span class="text-muted" *ngIf="!t.comentarios">—</span>
+                  <span *ngIf="t.comentarios">{{ t.comentarios }}</span>
+                </td>
+
+                <td class="text-nowrap">
+                  <ng-container *ngIf="t.fecha_registro; else sinFecha">
+                    {{ t.fecha_registro | date:"dd 'de' MMMM 'de' yyyy, h:mm a" }}
+                  </ng-container>
+                  <ng-template #sinFecha><span class="text-muted">—</span></ng-template>
+                </td>
+
+                <td [innerHTML]="t.nombre_estado | estadoBadge"></td>
+
+                <!--<td class="text-nowrap">
+                  <a
+                    class="btn btn-link-primary"
+                    [routerLink]="['/transferencias-cuentas/ver', t.id_transferencia]"
+                    title="Ver"
+                  >
+                    <i class="ti ti-eye"></i>
+                  </a>
+
+                  <button
+                    class="btn btn-link-danger"
+                    type="button"
+                    *ngIf="+t.estado_actual === 2"
+                    (click)="cambiarEstado(t, 3)"
+                    title="Archivar"
+                  >
+                    <i class="ti ti-archive"></i>
+                  </button>
+
+                  <button
+                    class="btn btn-link-success"
+                    type="button"
+                    *ngIf="+t.estado_actual === 3"
+                    (click)="cambiarEstado(t, 2)"
+                    title="Activar"
+                  >
+                    <i class="ti ti-restore"></i>
+                  </button>
+                </td>-->
+              </tr>
+
+              <tr *ngIf="transferencias.length === 0">
+                <td colspan="9" class="text-center text-muted">No hay transferencias.</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= MODAL NUEVA TRANSFERENCIA (sin bootstrap JS) ================= -->
+<div class="modal fade show d-block" *ngIf="modalAbierto" style="background: rgba(0,0,0,.45);">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="ti ti-arrows-exchange me-2"></i>Nueva transferencia
+        </h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="cerrarModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <form [formGroup]="form" (ngSubmit)="guardar()">
+
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Cuenta origen</label>
+              <select #selOrigen class="form-select" formControlName="cuenta_origen">
+                <option [ngValue]="null">Seleccione</option>
+                <option *ngFor="let c of cuentas" [ngValue]="c.id_cuenta">
+                  {{ c.nombre_cuenta }} — {{ (c.saldo || 0) | currency }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Cuenta destino</label>
+              <select class="form-select" formControlName="cuenta_destino">
+                <option [ngValue]="null">Seleccione</option>
+                <option *ngFor="let c of cuentas" [ngValue]="c.id_cuenta">
+                  {{ c.nombre_cuenta }} — {{ (c.saldo || 0) | currency }}
+                </option>
+              </select>
+            </div>
+
+            <div class="col-md-8">
+              <label class="form-label">Descripción</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="descripcion"
+                placeholder="Ej: Transferencia para gastos"
+                maxlength="120"
+              />
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Importe</label>
+              <input
+                #importeInput
+                type="number"
+                class="form-control"
+                formControlName="importe"
+                step="0.01"
+                min="0.01"
+              />
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Comentarios</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="comentarios"
+                placeholder="Opcional"
+                maxlength="200"
+                (keydown.enter)="guardarFromKey($event)"
+              />
+            </div>
+
+            <div class="col-12">
+              <div class="alert alert-warning py-2 mb-0" *ngIf="formError">
+                <i class="ti ti-alert-triangle me-1"></i>{{ formError }}
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" type="button" (click)="cerrarModal()" [disabled]="guardando">
+          Cancelar
+        </button>
+        <button class="btn btn-primary" type="button" (click)="guardar()" [disabled]="guardando">
+          <i class="ti ti-device-floppy me-1"></i>
+          {{ guardando ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
